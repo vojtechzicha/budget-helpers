@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.demoPadder {
+  padding-top: 15px;
+}
+
+.btn-default {
+  color: #007aff;
+  background-color: #fff;
+  border-color: #007aff;
+}
