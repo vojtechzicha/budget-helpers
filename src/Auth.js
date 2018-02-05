@@ -3,10 +3,10 @@ import history from './history'
 
 export default class Auth {
   auth0 = new auth0.WebAuth({
-    domain: 'vojtechzicha.eu.auth0.com',
-    clientID: 'clHUkc1jgPU2PK6yaObBcHkvN7KRwZwq',
-    redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://vojtechzicha.eu.auth0.com/userinfo',
+    domain: process.env.REACT_APP_AUTH_DOMAIN,
+    clientID: process.env.REACT_APP_AUTH_CLIENT_ID,
+    redirectUri: `${document.location.origin}/${process.env.PUBLIC_URL}callback`,
+    audience: process.env.REACT_APP_AUTH_AUDIENCE,
     responseType: 'token id_token',
     scope: 'openid'
   })
