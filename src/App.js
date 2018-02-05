@@ -1,8 +1,21 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom'
+import { Router, Route, withRouter } from 'react-router-dom'
 
 import ListScreen, { DefaultListScreen } from './components/list'
 import BudgetScreen from './components/budget/BudgetScreen'
+import Login from './components/Login'
+import Auth from './Auth'
+import history from './history'
+
+const auth = new Auth()
+
+const handleAuthentication = (nextState, replace) => {
+  if (/access_token|id_token|error/.test(nextState.location.hash)) {
+    auth.handleAuthentication()
+  }
+}
+
+const Callback = () => <div>Loading...</div>
 
 const ScrollToTop = withRouter(
   class extends Component {
@@ -21,12 +34,20 @@ const ScrollToTop = withRouter(
 class App extends Component {
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <ScrollToTop>
           <div className="App">
-            <Route exact path="/budget" component={BudgetScreen} />
-            <Route exact path="/item/:key" component={ListScreen} />
-            <Route exact path="/" component={DefaultListScreen} />
+            <Route exact path="/budget" render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} /> : <Login auth={auth} />)} />
+            <Route exact path="/item/:key" render={props => (auth.isAuthenticated() ? <ListScreen {...props} /> : <Login auth={auth} />)} />
+            <Route exact path="/" render={props => (auth.isAuthenticated() ? <DefaultListScreen {...props} /> : <Login auth={auth} />)} />
+            <Route
+              exact
+              path="/callback"
+              render={props => {
+                handleAuthentication(props)
+                return <Callback {...props} />
+              }}
+            />
           </div>
         </ScrollToTop>
       </Router>

@@ -4,6 +4,7 @@
   "private": true,
   "repository": "https://github.com/vojtechzicha/budget-helpers.git",
   "dependencies": {
+    "auth0-js": "^9.2.0",
     "bootstrap": "^4.0.0",
     "express-fileupload": "^0.4.0",
     "jquery": "^3.2.1",

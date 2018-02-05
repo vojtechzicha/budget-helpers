@@ -54,8 +54,10 @@ class BudgetScreen extends Component {
         .format('YYYYMM')
     )
 
+  month = m => `${m.toString().substring(4, 6)}/${m.toString().substring(0, 4)}`
+
   async componentDidMount() {
-    const months = this.months(moment().date(1), 12)
+    const months = this.months(moment().date(1), 5)
 
     this.setState({
       budgets: await Promise.all(
@@ -79,7 +81,7 @@ class BudgetScreen extends Component {
               <th scope="col">Row</th>
               {months.map(m => (
                 <th scope="col" key={m} style={{ textAlign: 'right' }}>
-                  {m}
+                  {this.month(m)}
                 </th>
               ))}
             </tr>
@@ -117,7 +119,6 @@ class BudgetScreen extends Component {
         <hr />
         <table className="table table-border table-hover" style={{ tableLayout: 'fixed' }}>
           <tbody>
-            <Row budgets={budgets} heading="Monthly Transaction" selector={b => -b.writeOff - b.appliedDamages + b.investment} />
             <TotalRow budgets={budgets} heading="Total Asset Value" selector={b => b.currentValue} />
             <Row budgets={budgets} heading="Total Cash Income/Expanse" selector={b => -b.investment + b.soldValue} />
           </tbody>
