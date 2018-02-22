@@ -19,9 +19,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server:start": "cd ./server && yarn start",
+    "server:dev:start": "cd ./server && yarn dev:start",
+    "dev:start": "run-p start server:dev:start"
   },
   "main": "index.js",
   "author": "Vojtěch Zicha <vojtech@zicha.name>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "npm-run-all": "^4.1.2"
+  }
 }
