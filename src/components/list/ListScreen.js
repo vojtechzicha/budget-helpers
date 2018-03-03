@@ -226,7 +226,12 @@ class ListScreen extends Component {
               ) : form === 'edit' ? (
                 <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} />
               ) : (
-                <DeviceList item={item} onRemove={this.handleRemove} onEditMode={() => this.setState({ form: 'edit' })} />
+                <DeviceList
+                  item={item}
+                  onRemove={this.handleRemove}
+                  onEditMode={() => this.setState({ form: 'edit' })}
+                  fetch={this.props.fetch}
+                />
               )}
             </div>
           </div>

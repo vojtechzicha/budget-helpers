@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import Octicon from 'react-octicon'
 
-const DeviceDetail = ({ item }) => {
+const DeviceDetail = ({ item, fetch }) => {
   const cards = require('./cards/index')
     .default.map(card => card(item))
     .filter(card => card.rows > 0)
@@ -24,7 +24,7 @@ const DeviceDetail = ({ item }) => {
         <div key={index} className="col-sm-4">
           {col.map(card => (
             <div key={card.key} style={{ marginTop: '.5em' }}>
-              {card.card()}
+              {card.card(fetch)}
             </div>
           ))}
         </div>
@@ -39,7 +39,7 @@ class DeviceList extends Component {
   }
 
   render() {
-    const { item, onRemove, onEdit } = this.props
+    const { item, onRemove, onEdit, fetch } = this.props
 
     return (
       <div>
@@ -56,7 +56,7 @@ class DeviceList extends Component {
             </Fragment>
           ) : null}
         </h2>
-        <DeviceDetail item={item} />
+        <DeviceDetail item={item} fetch={fetch} />
       </div>
     )
   }

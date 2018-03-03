@@ -32,14 +32,16 @@ const ScrollToTop = withRouter(
 )
 
 class App extends Component {
-  fetch = (component, action, options = {}, headers = []) =>
-    fetch(`${process.env.REACT_APP_SERVER_URI}api/${component}/v1/${action}`, {
+  fetch = (component, action, options = {}, headers = {}) => {
+    console.log(component, action, options, headers)
+    return fetch(`${process.env.REACT_APP_SERVER_URI}api/${component}/v1/${action}`, {
       ...options,
       headers: new Headers({
         ...headers,
         Authorization: `Bearer ${auth.getToken()}`
       })
     })
+  }
 
   render() {
     return (
