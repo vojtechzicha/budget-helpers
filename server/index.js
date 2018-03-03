@@ -4,6 +4,7 @@ import { json, urlencoded } from 'body-parser'
 import fs from 'fs'
 import morgan from 'morgan'
 import path from 'path'
+import { MongoClient } from 'mongodb'
 
 import assets from './app/assets'
 
@@ -26,6 +27,14 @@ app.use(
   })
 )
 
-app.use('/api/assets/v1/', assets)
+MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
+  if (err) {
+    console.error('No connection to the database')
+    throw err
+  }
+  app.locals.db = conn.db(process.env.MONGO_DATABASE)
 
-app.listen(process.env.port || 3030)
+  app.listen(process.env.port || 3030)
+})
+
+app.use('/api/assets/v1/', assets)
