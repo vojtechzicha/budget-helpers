@@ -2,7 +2,6 @@ import React from 'react'
 import moment from 'moment'
 
 import Card from './Card'
-import { formatCurrency } from '../../../helpers'
 
 export const SerialKey = item => ({
   key: 'serial-key',
@@ -18,9 +17,10 @@ export const Invoice = item => ({
       <p className="card-text">
         <strong>Date</strong>: {moment(item.invoice.date).format('MMMM Do, YYYY')}
         <br />
-        <strong>Amount</strong>: {formatCurrency(item.invoice.accountingCurrencyAmount)}
+        <strong>Amount</strong>: {item.invoice.accountingCurrencyAmount.toLocaleString('cs-CZ', { style: 'currency', currency: 'CZK' })}
         <br />
-        <strong>Original Amount</strong>: {formatCurrency(item.invoice.originalCurrencyAmount, ` ${item.invoice.originalCurrency}`)}
+        <strong>Original Amount</strong>:{' '}
+        {item.invoice.originalCurrencyAmount.toLocaleString('cs-CZ', { style: 'currency', currency: item.invoice.originalCurrency })}
       </p>
     </Card>
   )

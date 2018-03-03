@@ -2,19 +2,11 @@ import React, { Component, Fragment } from 'react'
 import moment from 'moment'
 
 import Header from '../Header'
-import { formatCurrency } from '../../helpers'
+// import { formatCurrency } from '../../helpers'
 
-const NormalValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{formatCurrency(value)}</td>
-const TotalValueCell = ({ value }) => (
-  <td style={{ textAlign: 'right' }}>
-    <strong>{formatCurrency(value)}</strong>
-  </td>
-)
-const ExplainValueCell = ({ value }) => (
-  <td style={{ textAlign: 'right' }}>
-    <em>{formatCurrency(value)}</em>
-  </td>
-)
+const NormalValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{value}</td>
+const TotalValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{/* <strong>{formatCurrency(value)}</strong> */}</td>
+const ExplainValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{/* <em>{formatCurrency(value)}</em> */}</td>
 const RawRow = ({ budgets, heading, selector, result }) => (
   <tr>
     {heading}

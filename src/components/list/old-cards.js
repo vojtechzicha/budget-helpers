@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import moment from 'moment'
 
-import { formatCurrency } from './../../helpers'
+// import { formatCurrency } from './../../helpers'
 import Card from './cards/Card'
 
 export const Sell = item => ({
