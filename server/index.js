@@ -34,7 +34,6 @@ app.use((req, res, next) => {
   res.header('Expires', '-1')
   res.header('Pragma', 'no-cache')
 
-  console.log(req.headers)
   req.headers['if-none-match'] = 'no-match-for-this'
 
   next()

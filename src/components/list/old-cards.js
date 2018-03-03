@@ -41,23 +41,6 @@ export const Documents = item => ({
   )
 })
 
-export const Identifiers = item => ({
-  key: 'ids',
-  rows: item.ids === undefined ? 0 : item.ids.length,
-  card: () => (
-    <Card title="Identifiers">
-      <p className="card-text">
-        {item.ids.map(id => (
-          <Fragment key={id.type + '-' + id.value}>
-            <strong>{id.type}</strong>: {id.value}
-            <br />
-          </Fragment>
-        ))}
-      </p>
-    </Card>
-  )
-})
-
 export const WriteOff = item => ({
   key: 'write-off',
   rows: (res => (res === null ? 0 : 7))(item.calculation.absolute),

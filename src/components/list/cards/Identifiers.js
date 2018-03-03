@@ -2,19 +2,19 @@ import React from 'react'
 
 import KeyValueCard from './KeyValueCard'
 
-const Details = item => ({
-  key: 'details',
-  rows: item.details === undefined ? 0 : item.details.length,
+const Identifiers = item => ({
+  key: 'ids',
+  rows: item.ids === undefined ? 0 : item.ids.length,
   card: fetch => (
     <KeyValueCard
       item={item}
-      itemKey="details"
-      label="Details"
+      itemKey="ids"
+      label="Identifiers"
       fetch={fetch}
       handleRemove={async i => {
-        const { _id, details } = item
+        const { _id, ids } = item
 
-        const newDetails = [...details.slice(0, i), ...details.slice(i + 1)]
+        const newIds = [...ids.slice(0, i), ...ids.slice(i + 1)]
 
         await fetch(
           'assets',
@@ -22,7 +22,7 @@ const Details = item => ({
           {
             method: 'post',
             body: JSON.stringify({
-              details: newDetails
+              ids: newIds
             })
           },
           {
@@ -31,12 +31,12 @@ const Details = item => ({
           }
         )
 
-        return newDetails
+        return newIds
       }}
-      handleEdit={async (i, detail) => {
-        const { _id, details } = item
+      handleEdit={async (i, id) => {
+        const { _id, ids } = item
 
-        const newDetails = [...details.slice(0, i), detail, ...details.slice(i + 1)]
+        const newIds = [...ids.slice(0, i), id, ...ids.slice(i + 1)]
 
         await fetch(
           'assets',
@@ -44,7 +44,7 @@ const Details = item => ({
           {
             method: 'post',
             body: JSON.stringify({
-              details: newDetails
+              ids: newIds
             })
           },
           {
@@ -53,12 +53,12 @@ const Details = item => ({
           }
         )
 
-        return newDetails
+        return newIds
       }}
       handleCreate={async () => {
-        const { _id, details } = item
+        const { _id, ids } = item
 
-        const newDetails = [...details, { key: '', value: '' }]
+        const newIds = [...ids, { key: '', value: '' }]
 
         await fetch(
           'assets',
@@ -66,7 +66,7 @@ const Details = item => ({
           {
             method: 'post',
             body: JSON.stringify({
-              details: newDetails
+              ids: newIds
             })
           },
           {
@@ -75,10 +75,10 @@ const Details = item => ({
           }
         )
 
-        return newDetails
+        return newIds
       }}
     />
   )
 })
 
-export default Details
+export default Identifiers

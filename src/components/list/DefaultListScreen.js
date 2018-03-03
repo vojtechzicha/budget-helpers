@@ -7,8 +7,6 @@ class DefaultListScreen extends Component {
   }
 
   async componentDidMount() {
-    console.log(this.context)
-
     const item = await this.props.fetch('assets', 'item').then(res => res.json())
     this.setState({ id: item._id })
   }
