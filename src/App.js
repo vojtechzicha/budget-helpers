@@ -47,7 +47,11 @@ class App extends Component {
         <ScrollToTop>
           <div className="App">
             <Route exact path="/budget" render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} /> : <Login auth={auth} />)} />
-            <Route exact path="/item/:key" render={props => (auth.isAuthenticated() ? <ListScreen {...props} /> : <Login auth={auth} />)} />
+            <Route
+              exact
+              path="/item/:key"
+              render={props => (auth.isAuthenticated() ? <ListScreen {...props} fetch={this.fetch} /> : <Login auth={auth} />)}
+            />
             <Route
               exact
               path="/"

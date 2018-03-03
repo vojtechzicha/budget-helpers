@@ -264,7 +264,7 @@ export const Damages = item => ({
 
 export const Month = item => ({
   key: 'month',
-  rows: (res => (res === null || res.lastMonthValue === res.currentValue ? 0 : 7))(item.calculation.relative),
+  rows: (res => (res === null ? 0 : res.lastMonthValue === res.currentValue ? 0 : 7))(item.calculation.relative),
   card: () => {
     const res = item.calculation.relative
     return (

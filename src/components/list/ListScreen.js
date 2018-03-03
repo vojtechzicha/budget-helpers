@@ -148,16 +148,17 @@ class ListScreen extends Component {
       month = moment().format('YYYYMM')
     }
 
-    return `${process.env.REACT_APP_SERVER_URI}assets/item/${id}?absolute&relative=${month}`
+    // return `item/${id}?absolute&relative=${month}`
+    return `item/${id}`
   }
 
   async componentDidMount() {
-    const { match: { params } } = this.props
+    const { match: { params }, fetch } = this.props
     const { filterSelector } = this.state
 
     const [items, item] = await Promise.all([
-      fetch(`${process.env.REACT_APP_SERVER_URI}assets/items?filter=${this.options[filterSelector]}`).then(res => res.json()),
-      fetch(this.itemUrl(params.key)).then(res => res.json())
+      fetch('assets', `items?filter=${this.options[filterSelector]}`).then(res => res.json()),
+      fetch('assets', this.itemUrl(params.key)).then(res => res.json())
     ])
     this.setState({
       items,
@@ -174,7 +175,7 @@ class ListScreen extends Component {
   }
 
   async updateItem(key) {
-    const item = await fetch(this.itemUrl(key)).then(res => res.json())
+    const item = await this.props.fetch('assets', this.itemUrl(key)).then(res => res.json())
     this.setState({
       item,
       edit: this.prepareEdit(item),
@@ -191,18 +192,26 @@ class ListScreen extends Component {
   }
 
   handleEdit = async () => {
-    const editedItem = await fetch(`${process.env.REACT_APP_SERVER_URI}assets/item/${this.state.item._id}`, {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...JSON.parse(this.state.edit) /*,
+    const { item: { _id }, edit } = this.state
+
+    await this.props
+      .fetch(
+        'assets',
+        `item/${_id}`,
+        {
+          method: 'post',
+          body: JSON.stringify({
+            ...JSON.parse(edit) /*,
         documents: this.state.item.documents*/
-      })
-    }).then(res => res.json())
-    this.updateItem(editedItem._id)
+          })
+        },
+        {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      )
+      .then(res => res.json())
+    this.updateItem(_id)
   }
 
   handleRemove = async () => {

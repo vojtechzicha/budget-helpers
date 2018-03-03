@@ -27,6 +27,19 @@ app.use(
   })
 )
 
+app.disable('etag')
+
+app.use((req, res, next) => {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+  res.header('Expires', '-1')
+  res.header('Pragma', 'no-cache')
+
+  console.log(req.headers)
+  req.headers['if-none-match'] = 'no-match-for-this'
+
+  next()
+})
+
 MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
   if (err) {
     console.error('No connection to the database')
