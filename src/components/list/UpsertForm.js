@@ -17,9 +17,15 @@ const Input = ({ name, label, type = 'text', values, errors, touched, handleChan
   </div>
 )
 
-const UpsertForm = ({ onSubmit }) => (
+const UpsertForm = ({ onSubmit, item }) => (
   <Formik
-    initialValues={{ title: '', invoice_date: moment().format('YYYY-MM-DD'), invoice_amount: '', serialKey: '', warranty: '' }}
+    initialValues={{
+      title: item === null ? '' : item.title,
+      invoice_date: moment(item === null ? new Date() : item.invoice.date).format('YYYY-MM-DD'),
+      invoice_amount: item === null ? '' : item.invoice.accountingCurrencyAmount,
+      serialKey: item === null || item.serialKey === null || item.serialKey === undefined ? '' : item.serialKey,
+      warranty: item === null ? '' : item.warranty
+    }}
     validationSchema={Yup.object().shape({
       title: Yup.string().required('The title is required'),
       invoice_date: Yup.date().required('You must select a date'),
@@ -59,7 +65,7 @@ const UpsertForm = ({ onSubmit }) => (
           <Input type="date" name="invoice_date" label="Date" {...inputProps} />
           <Input type="number" name="invoice_amount" label="Amount" {...inputProps} />
           <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-            Create
+            {item === null ? 'Create' : 'Update'}
           </button>
         </form>
       )

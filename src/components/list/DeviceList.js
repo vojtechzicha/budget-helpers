@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import Octicon from 'react-octicon'
 
 const DeviceDetail = ({ item }) => {
   const cards = Object.values(require('./cards'))
@@ -32,79 +33,30 @@ const DeviceDetail = ({ item }) => {
   )
 }
 
-class ContentEditable extends Component {
-  lastValue = ''
-  pre = null
-
-  shouldComponentUpdate(nextProps) {
-    return nextProps.value !== this.pre.innerText
-  }
-
-  emitChange = () => {
-    const value = this.pre.innerText
-    if (this.props.onChange && value !== this.lastValue) {
-      this.props.onChange({ target: { value } })
-      this.lastValue = value
-    }
-  }
-
-  render() {
-    return (
-      <pre
-        onInput={this.emitChange}
-        onBlur={this.emitChange}
-        contentEditable
-        suppressContentEditableWarning="true"
-        ref={dom => {
-          this.pre = dom
-        }}>
-        {this.props.value}
-      </pre>
-    )
-  }
-}
-
 const Toolbar = ({ onEdit, enableEdit, onRemove, onUpload = null }) => (
   <div className="text-center">
     <div className="btn-group" role="group" aria-label="Toolbar">
-      <button type="button" className="btn btn-primary" disabled={!enableEdit} onClick={onEdit}>
-        Edit
-      </button>
       <button type="button" className="btn btn-danger" onClick={onRemove}>
         Remove
       </button>
-      {onUpload && (
-        <button type="button" className="btn btn-secondary" onClick={onUpload}>
-          Upload Document
-        </button>
-      )}
     </div>
   </div>
 )
 
-const DeviceList = ({ item, onEdit, editError, onRemove, prepareEdit, onEditChange }) => {
-  const tool = <Toolbar onEdit={onEdit} enableEdit={!editError} onRemove={onRemove} />
+const DeviceList = ({ item, onRemove, onEditMode }) => {
+  const tool = <Toolbar onRemove={onRemove} />
 
   return (
     <div>
-      <h2>{item.title}</h2>
+      <h2>
+        {item.title}{' '}
+        <button type="button" className="btn btn-default btn-outline" onClick={() => onEditMode()}>
+          <Octicon mega name="pencil" />
+        </button>
+      </h2>
       <DeviceDetail item={item} />
       <hr />
       {tool}
-      <hr />
-      {editError && <strong>Error in jSON</strong>}
-      <ContentEditable value={prepareEdit(item)} onChange={onEditChange} />
-      <hr />
-      {tool}
-      <hr />
-      <form
-        id="uploadForm"
-        action={`${process.env.REACT_APP_SERVER_URI}assets/item/${item._id}/document`}
-        method="post"
-        encType="multipart/form-data">
-        <input type="file" name="document" />
-        <input type="submit" value="Upload" />
-      </form>
     </div>
   )
 }

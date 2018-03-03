@@ -1,12 +1,13 @@
 import React, { Fragment, Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import moment from 'moment'
+import Octicon from 'react-octicon'
 
 import Header from './../Header'
 import DeviceList from './DeviceList'
 import UpsertForm from './UpsertForm'
 
-const Filter = ({ onChange, filter, options = [], current = null }) => (
+const Filter = ({ onChange, filter, options = [], current = null, isCreate = false, onCreate = null, onBack = null }) => (
   <div className="input-group mb-3">
     <input
       type="text"
@@ -33,6 +34,18 @@ const Filter = ({ onChange, filter, options = [], current = null }) => (
               )
           )}
         </div>
+        {!isCreate &&
+          onCreate && (
+            <button className="btn btn-secondary" type="button" onClick={onCreate}>
+              <Octicon name="plus" />
+            </button>
+          )}
+        {isCreate &&
+          onBack && (
+            <button className="btn btn-secondary" type="button" onClick={onBack}>
+              <Octicon name="arrow-left" />
+            </button>
+          )}
       </div>
     )}
   </div>
@@ -52,14 +65,8 @@ class ListScreen extends Component {
     filterLoading: false,
     items: [],
     item: 'loading',
-    edit: '',
-    editError: false,
     redirect: null,
     form: null
-  }
-
-  prepareEdit(obj) {
-    return JSON.stringify({ ...obj, calculation: undefined, _id: undefined /*, documents: undefined*/ }, null, 2)
   }
 
   componentDidUpdate() {
@@ -71,8 +78,7 @@ class ListScreen extends Component {
       month = moment().format('YYYYMM')
     }
 
-    // return `item/${id}?absolute&relative=${month}`
-    return `item/${id}`
+    return `item/${id}?absolute&relative=${month}`
   }
 
   async componentDidMount() {
@@ -100,41 +106,8 @@ class ListScreen extends Component {
     this.setState({
       items,
       item,
-      edit: this.prepareEdit(item),
-      editError: false,
-      form: null
+      form: 'default'
     })
-  }
-
-  handleEditChange = e => {
-    try {
-      this.setState({ edit: this.prepareEdit(JSON.parse(e.target.value)), editError: false })
-    } catch (e) {
-      this.setState({ editError: true })
-    }
-  }
-
-  handleEdit = async () => {
-    const { item: { _id }, edit } = this.state
-
-    await this.props
-      .fetch(
-        'assets',
-        `item/${_id}`,
-        {
-          method: 'post',
-          body: JSON.stringify({
-            ...JSON.parse(edit) /*,
-        documents: this.state.item.documents*/
-          })
-        },
-        {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      )
-      .then(res => res.json())
-    this.updateItem(_id)
   }
 
   handleRemove = async () => {
@@ -158,7 +131,7 @@ class ListScreen extends Component {
     }
   }
 
-  handleUpsertSubmit = async body => {
+  handleUpsertCreateSubmit = async body => {
     return this.props
       .fetch(
         'assets',
@@ -178,21 +151,36 @@ class ListScreen extends Component {
       })
   }
 
+  handleUpsertEditSubmit = async body => {
+    const { item: { _id } } = this.state
+
+    return this.props
+      .fetch(
+        'assets',
+        `item/${_id}`,
+        {
+          method: 'post',
+          body: JSON.stringify(body)
+        },
+        {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      )
+      .then(res => {
+        this.updateItem(_id)
+      })
+  }
+
   render() {
     const { match } = this.props
-    const { filterSearch, filterSelector, filterLoading, items, item, editError, redirect, form } = this.state
+    const { filterSearch, filterSelector, filterLoading, items, item, redirect, form } = this.state
 
     return redirect !== null ? (
       <Redirect to={redirect} />
     ) : (
       <Fragment>
-        <Header match={match}>
-          {form !== 'create' && (
-            <button type="button" className="btn btn-success" onClick={() => this.setState({ form: 'create' })}>
-              Create
-            </button>
-          )}
-        </Header>
+        <Header match={match} />
         <div className="container-fluid" style={{ marginTop: '1em' }}>
           <div className="row">
             <div className="col-sm-3">
@@ -206,6 +194,9 @@ class ListScreen extends Component {
                       onChange={this.handleFilterChange}
                       current={filterSelector}
                       options={Object.keys(this.options)}
+                      isCreate={form === 'create'}
+                      onCreate={() => this.setState({ form: 'create' })}
+                      onBack={() => this.setState({ form: 'default' })}
                     />
                   )}
                 </li>
@@ -229,18 +220,13 @@ class ListScreen extends Component {
             </div>
             <div className="col-sm-9">
               {form === 'create' ? (
-                <UpsertForm onSubmit={this.handleUpsertSubmit} />
+                <UpsertForm item={null} onSubmit={this.handleUpsertCreateSubmit} />
               ) : item === 'loading' ? (
                 <h3>Loading</h3>
+              ) : form === 'edit' ? (
+                <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} />
               ) : (
-                <DeviceList
-                  item={item}
-                  onEdit={this.handleEdit}
-                  onRemove={this.handleRemove}
-                  editError={editError}
-                  onEditChange={this.handleEditChange}
-                  prepareEdit={this.prepareEdit}
-                />
+                <DeviceList item={item} onRemove={this.handleRemove} onEditMode={() => this.setState({ form: 'edit' })} />
               )}
             </div>
           </div>
