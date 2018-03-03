@@ -2,8 +2,8 @@ import React, { Component, Fragment } from 'react'
 import Octicon from 'react-octicon'
 
 const DeviceDetail = ({ item }) => {
-  const cards = Object.values(require('./cards'))
-    .map(card => card(item))
+  const cards = require('./cards/index')
+    .default.map(card => card(item))
     .filter(card => card.rows > 0)
 
   let cols = [[], [], []]

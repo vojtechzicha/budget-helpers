@@ -2,57 +2,8 @@ import React, { Fragment } from 'react'
 import moment from 'moment'
 
 import { formatCurrency } from './../../helpers'
+import Card from './cards/Card'
 
-const Card = ({ title, subtitle = null, border = null, children }) => (
-  <div className={`card ${border !== null && `border-${border}`}`}>
-    <div className="card-body">
-      <h5 className="card-title">{title}</h5>
-      {subtitle !== null && <h6 className="card-subtitle mb-2 text-muted">{subtitle}</h6>}
-      {children}
-    </div>
-  </div>
-)
-
-export const Details = item => ({
-  key: 'details',
-  rows: item.details === undefined ? 0 : Object.keys(item.details).length,
-  card: () => (
-    <Card title="Details">
-      <p className="card-text">
-        {Object.keys(item.details)
-          .map(key => ({ key, value: item.details[key] }))
-          .map(detail => (
-            <Fragment key={detail.key}>
-              <strong>{detail.key}</strong>: {detail.value}
-              <br />
-            </Fragment>
-          ))}
-      </p>
-    </Card>
-  )
-})
-
-export const SerialKey = item => ({
-  key: 'serial-key',
-  rows: item.serialKey !== undefined && item.serialKey !== null ? 1 : 0,
-  card: () => <Card title="Serial Key" subtitle={item.serialKey} />
-})
-
-export const Invoice = item => ({
-  key: 'invoice',
-  rows: 3,
-  card: () => (
-    <Card title="Invoice">
-      <p className="card-text">
-        <strong>Date</strong>: {moment(item.invoice.date).format('MMMM Do, YYYY')}
-        <br />
-        <strong>Amount</strong>: {formatCurrency(item.invoice.accountingCurrencyAmount)}
-        <br />
-        <strong>Original Amount</strong>: {formatCurrency(item.invoice.originalCurrencyAmount, ` ${item.invoice.originalCurrency}`)}
-      </p>
-    </Card>
-  )
-})
 export const Sell = item => ({
   key: 'sell',
   rows: item.sell !== undefined ? 3 : 0,
