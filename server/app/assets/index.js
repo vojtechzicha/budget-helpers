@@ -64,4 +64,32 @@ app.post('/item/:id', checkJwt, async (req, res, next) => {
   }
 })
 
+app.put('/item', checkJwt, async (req, res, next) => {
+  try {
+    const db = req.app.locals.db
+
+    const mongoRes = await db.collection('assets_item').insertOne(req.body)
+
+    if (mongoRes.result.ok === 1 && mongoRes.result.n === 1) {
+      res.json({ status: 'ok', id: mongoRes.insertedId })
+    } else {
+      res.status(400).json({ status: 'err' })
+    }
+  } catch (e) {
+    next(e)
+  }
+})
+
+app.delete('/item/:id', checkJwt, async (req, res, next) => {
+  try {
+    const db = req.app.locals.db
+
+    await db.collection('assets_item').deleteOne({ _id: ObjectID(req.params.id) })
+
+    res.sendStatus(204)
+  } catch (e) {
+    next(e)
+  }
+})
+
 export default app
