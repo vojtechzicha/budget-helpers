@@ -32,6 +32,15 @@ const ScrollToTop = withRouter(
 )
 
 class App extends Component {
+  fetch = (component, action, options = {}, headers = []) =>
+    fetch(`${process.env.REACT_APP_SERVER_URI}api/${component}/v1/${action}`, {
+      ...options,
+      headers: new Headers({
+        ...headers,
+        Authorization: `Bearer ${auth.getToken()}`
+      })
+    })
+
   render() {
     return (
       <Router history={history}>
@@ -39,7 +48,11 @@ class App extends Component {
           <div className="App">
             <Route exact path="/budget" render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} /> : <Login auth={auth} />)} />
             <Route exact path="/item/:key" render={props => (auth.isAuthenticated() ? <ListScreen {...props} /> : <Login auth={auth} />)} />
-            <Route exact path="/" render={props => (auth.isAuthenticated() ? <DefaultListScreen {...props} /> : <Login auth={auth} />)} />
+            <Route
+              exact
+              path="/"
+              render={props => (auth.isAuthenticated() ? <DefaultListScreen {...props} fetch={this.fetch} /> : <Login auth={auth} />)}
+            />
             <Route
               exact
               path="/callback"

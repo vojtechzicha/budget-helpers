@@ -20,4 +20,14 @@ app.get('/items', checkJwt, async (req, res, next) => {
   }
 })
 
+app.get('/item', checkJwt, async (req, res, next) => {
+  try {
+    const db = req.app.locals.db
+
+    res.json(await db.collection('assets_item').findOne())
+  } catch (e) {
+    next(e)
+  }
+})
+
 export default app

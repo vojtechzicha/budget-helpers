@@ -11,6 +11,8 @@ export default class Auth {
     scope: 'openid'
   })
 
+  token = null
+
   login = () => {
     this.auth0.authorize()
   }
@@ -33,13 +35,23 @@ export default class Auth {
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
 
+    this.token = authResult.idToken
+
     history.replace('/')
+  }
+
+  getToken = () => {
+    if (this.token !== null) return this.token
+
+    return localStorage.getItem('id_token') || null
   }
 
   logout = () => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')
+
+    this.token = null
 
     history.replace('/')
   }
