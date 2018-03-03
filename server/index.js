@@ -1,14 +1,31 @@
-const express = require('express'),
-  cors = require('cors'),
-  bodyParser = require('body-parser')
+import express from 'express'
+import cors from 'cors'
+import { json, urlencoded } from 'body-parser'
+import fs from 'fs'
+import morgan from 'morgan'
+import path from 'path'
+
+import assets from './app/assets'
 
 const app = express()
 
 app.use(cors())
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(json())
+app.use(urlencoded({ extended: true }))
 
-app.use('/api/assets/v1/', require('./app/assets'))
+app.use(
+  morgan('dev', {
+    skip: (req, res) => res.statusCode < 400
+  })
+)
+
+app.use(
+  morgan('common', {
+    stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+  })
+)
+
+app.use('/api/assets/v1/', assets)
 
 app.listen(process.env.port || 3030)

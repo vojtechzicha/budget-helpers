@@ -1,10 +1,10 @@
-const express = require('express'),
-  checkJwt = require('../../checkJwt')
+import { Router } from 'express'
+import checkJwt from '../../checkJwt'
 
-const app = express.Router()
+const app = Router()
 
 app.post('/items', checkJwt, (req, res) => {
-  res.status(201).send({ message: 'This is the POST endpoint' })
+  res.status(201).send()
 })
 
-module.exports = app
+export default app
