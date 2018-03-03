@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component, Fragment } from 'react'
 import Octicon from 'react-octicon'
 
 const DeviceDetail = ({ item }) => {
@@ -33,32 +33,33 @@ const DeviceDetail = ({ item }) => {
   )
 }
 
-const Toolbar = ({ onEdit, enableEdit, onRemove, onUpload = null }) => (
-  <div className="text-center">
-    <div className="btn-group" role="group" aria-label="Toolbar">
-      <button type="button" className="btn btn-danger" onClick={onRemove}>
-        Remove
-      </button>
-    </div>
-  </div>
-)
+class DeviceList extends Component {
+  state = {
+    showControls: false
+  }
 
-const DeviceList = ({ item, onRemove, onEditMode }) => {
-  const tool = <Toolbar onRemove={onRemove} />
+  render() {
+    const { item, onRemove, onEdit } = this.props
 
-  return (
-    <div>
-      <h2>
-        {item.title}{' '}
-        <button type="button" className="btn btn-default btn-outline" onClick={() => onEditMode()}>
-          <Octicon mega name="pencil" />
-        </button>
-      </h2>
-      <DeviceDetail item={item} />
-      <hr />
-      {tool}
-    </div>
-  )
+    return (
+      <div>
+        <h2 onMouseEnter={() => this.setState({ showControls: true })} onMouseLeave={() => this.setState({ showControls: false })}>
+          {item.title}
+          {this.state.showControls ? (
+            <Fragment>
+              <button type="button" className="btn btn-default btn-outline" onClick={() => onEdit()}>
+                <Octicon mega name="pencil" />
+              </button>
+              <button type="button" className="btn btn-default btn-outline" onClick={() => onRemove()}>
+                <Octicon mega name="trashcan" />
+              </button>
+            </Fragment>
+          ) : null}
+        </h2>
+        <DeviceDetail item={item} />
+      </div>
+    )
+  }
 }
 
 export default DeviceList
