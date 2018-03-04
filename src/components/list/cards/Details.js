@@ -11,7 +11,7 @@ const Details = item => ({
       itemKey="details"
       label="Details"
       fetch={fetch}
-      handleRemove={async i => {
+      handleRemove={async (item, i) => {
         const { _id, details } = item
 
         const newDetails = [...details.slice(0, i), ...details.slice(i + 1)]
@@ -33,7 +33,7 @@ const Details = item => ({
 
         return newDetails
       }}
-      handleEdit={async (i, detail) => {
+      handleEdit={async (item, i, detail) => {
         const { _id, details } = item
 
         const newDetails = [...details.slice(0, i), detail, ...details.slice(i + 1)]
@@ -55,7 +55,7 @@ const Details = item => ({
 
         return newDetails
       }}
-      handleCreate={async () => {
+      handleCreate={async item => {
         const { _id, details } = item
 
         const newDetails = [...details, { key: '', value: '' }]

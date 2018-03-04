@@ -33,7 +33,7 @@ const Identifiers = item => ({
       itemKey="ids"
       label="Identifiers"
       fetch={fetch}
-      handleRemove={async i => {
+      handleRemove={async (item, i) => {
         const { _id, ids } = item
 
         const newIds = [...ids.slice(0, i), ...ids.slice(i + 1)]
@@ -55,7 +55,7 @@ const Identifiers = item => ({
 
         return newIds
       }}
-      handleEdit={async (i, id) => {
+      handleEdit={async (item, i, id) => {
         const { _id, ids } = item
 
         const newIds = [...ids.slice(0, i), id, ...ids.slice(i + 1)]
@@ -77,7 +77,7 @@ const Identifiers = item => ({
 
         return newIds
       }}
-      handleCreate={async () => {
+      handleCreate={async item => {
         const { _id, ids } = item
 
         const newIds = [...ids, { key: '', value: '' }]

@@ -73,7 +73,7 @@ class KeyValueCard extends Component {
     const { item } = this.state
     const { itemKey, handleEdit } = this.props
 
-    const newVal = await handleEdit(i, val)
+    const newVal = await handleEdit(item, i, val)
 
     this.setState({
       item: { ...item, [itemKey]: newVal },
@@ -85,7 +85,7 @@ class KeyValueCard extends Component {
     const { item } = this.state
     const { itemKey, handleCreate } = this.props
 
-    const newVal = await handleCreate()
+    const newVal = await handleCreate(item)
 
     this.setState({
       item: { ...item, [itemKey]: newVal },
@@ -97,7 +97,7 @@ class KeyValueCard extends Component {
     const { item } = this.state
     const { itemKey, handleRemove } = this.props
 
-    const newVal = await handleRemove(i)
+    const newVal = await handleRemove(item, i)
 
     this.setState({
       item: { ...item, [itemKey]: newVal }
