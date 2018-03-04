@@ -229,7 +229,7 @@ class ListScreen extends Component {
                 <DeviceList
                   item={item}
                   onRemove={this.handleRemove}
-                  onEditMode={() => this.setState({ form: 'edit' })}
+                  onEdit={() => this.setState({ form: 'edit' })}
                   fetch={this.props.fetch}
                 />
               )}
