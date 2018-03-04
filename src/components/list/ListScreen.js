@@ -82,9 +82,7 @@ class ListScreen extends Component {
   }
 
   async componentDidMount() {
-    const { match: { params } } = this.props
-
-    this.updateItem(params.key)
+    this.updateItem(null)
   }
 
   async componentWillReceiveProps(newProps) {
@@ -94,7 +92,7 @@ class ListScreen extends Component {
   }
 
   async updateItem(id) {
-    if (id === null) id = this.props.params.key
+    if (id === null) id = this.props.match.params.key
 
     const { filterSelector } = this.state
     const { fetch } = this.props
@@ -231,6 +229,7 @@ class ListScreen extends Component {
                   onRemove={this.handleRemove}
                   onEdit={() => this.setState({ form: 'edit' })}
                   fetch={this.props.fetch}
+                  onUpdate={() => this.updateItem(null)}
                 />
               )}
             </div>
