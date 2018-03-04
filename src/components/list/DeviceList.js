@@ -68,7 +68,7 @@ class DeviceList extends Component {
             <div key={index} className="col-sm-4">
               {col.map(card => (
                 <div key={card.key} style={{ marginTop: '.5em' }}>
-                  {card.card(fetch, onUpdate)}
+                  {card.card(fetch, onUpdate, this.props.auth)}
                 </div>
               ))}
             </div>

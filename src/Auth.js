@@ -57,4 +57,15 @@ export default class Auth {
   }
 
   isAuthenticated = () => new Date().getTime() < JSON.parse(localStorage.getItem('expires_at'))
+
+  isOneDriveAuthenticated = () => localStorage.getItem('onedrive_access_token') !== null
+
+  handleOneDriveAuthentication = hash => {
+    if (/access_token=([^&]+)/.exec(hash)[1] !== undefined) {
+      localStorage.setItem('onedrive_access_token', /access_token=([^&]+)/.exec(hash)[1])
+      history.replace('/')
+    }
+  }
+
+  getOneDriveToken = () => localStorage.getItem('onedrive_access_token')
 }

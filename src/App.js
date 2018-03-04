@@ -15,6 +15,12 @@ const handleAuthentication = (nextState, replace) => {
   }
 }
 
+const handleOneDriveAuthentication = nextState => {
+  if (/access_token/.test(nextState.location.hash)) {
+    auth.handleOneDriveAuthentication(nextState.location.hash)
+  }
+}
+
 const Callback = () => <div>Loading...</div>
 
 const ScrollToTop = withRouter(
@@ -51,7 +57,7 @@ class App extends Component {
             <Route
               exact
               path="/item/:key"
-              render={props => (auth.isAuthenticated() ? <ListScreen {...props} fetch={this.fetch} /> : <Login auth={auth} />)}
+              render={props => (auth.isAuthenticated() ? <ListScreen {...props} fetch={this.fetch} auth={auth} /> : <Login auth={auth} />)}
             />
             <Route
               exact
@@ -63,6 +69,24 @@ class App extends Component {
               path="/callback"
               render={props => {
                 handleAuthentication(props)
+                return <Callback {...props} />
+              }}
+            />
+            <Route
+              exact
+              path="/onedrive/signin"
+              render={() =>
+                (window.location =
+                  'https://login.live.com/oauth20_authorize.srf?client_id=a7fba33d-f054-47c3-92d3-27978004647d&scope=onedrive.readwrite' +
+                  '&response_type=token&redirect_uri=' +
+                  encodeURIComponent('http://localhost:3000/onedrive/callback'))
+              }
+            />
+            <Route
+              exact
+              path="/onedrive/callback"
+              render={props => {
+                handleOneDriveAuthentication(props)
                 return <Callback {...props} />
               }}
             />

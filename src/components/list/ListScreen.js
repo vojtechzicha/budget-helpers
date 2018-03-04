@@ -230,6 +230,7 @@ class ListScreen extends Component {
                   onEdit={() => this.setState({ form: 'edit' })}
                   fetch={this.props.fetch}
                   onUpdate={() => this.updateItem(null)}
+                  auth={this.props.auth}
                 />
               )}
             </div>
