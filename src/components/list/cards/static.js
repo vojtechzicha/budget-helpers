@@ -3,12 +3,6 @@ import moment from 'moment'
 
 import Card from './Card'
 
-export const SerialKey = item => ({
-  key: 'serial-key',
-  rows: item.serialKey !== undefined && item.serialKey !== null ? 1 : 0,
-  card: () => <Card title="Serial Key" subtitle={item.serialKey} />
-})
-
 export const Invoice = item => ({
   key: 'invoice',
   rows: 3,

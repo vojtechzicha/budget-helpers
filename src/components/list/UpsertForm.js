@@ -23,20 +23,17 @@ const UpsertForm = ({ onSubmit, item }) => (
       title: item === null ? '' : item.title,
       invoice_date: moment(item === null ? new Date() : item.invoice.date).format('YYYY-MM-DD'),
       invoice_amount: item === null ? '' : item.invoice.accountingCurrencyAmount,
-      serialKey: item === null || item.serialKey === null || item.serialKey === undefined ? '' : item.serialKey,
       warranty: item === null ? '' : item.warranty
     }}
     validationSchema={Yup.object().shape({
       title: Yup.string().required('The title is required'),
       invoice_date: Yup.date().required('You must select a date'),
       invoice_amount: Yup.number().required('You must input invoice amount'),
-      serialKey: Yup.string(),
       warranty: Yup.number().required('The warranty period is required')
     })}
     onSubmit={async (values, { setSubmitting }) => {
       await onSubmit({
         title: values.title,
-        serialKey: values.serialKey === '' ? null : values.serialKey,
         warranty: values.warranty,
         invoice: {
           date: moment(values.invoice_date, 'YYYY-MM-DD').toISOString(),
@@ -59,7 +56,6 @@ const UpsertForm = ({ onSubmit, item }) => (
       return (
         <form onSubmit={handleSubmit}>
           <Input name="title" label="Title" {...inputProps} />
-          <Input name="serialKey" label="Serial Key" {...inputProps} />
           <Input type="number" name="warranty" label="Warranty Period (in months)" {...inputProps} />
           <h3>Invoice</h3>
           <Input type="date" name="invoice_date" label="Date" {...inputProps} />
