@@ -5,6 +5,28 @@ import KeyValueCard from './KeyValueCard'
 const Details = item => ({
   key: 'details',
   rows: item.details === undefined ? 0 : item.details.length,
+  new: {
+    label: 'Detail',
+    key: 'details',
+    handleNew: async (item, fetch) => {
+      const { _id } = item
+
+      await fetch(
+        'assets',
+        `item/${_id}`,
+        {
+          method: 'post',
+          body: JSON.stringify({
+            details: [{ key: '', value: '' }]
+          })
+        },
+        {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      )
+    }
+  },
   card: fetch => (
     <KeyValueCard
       item={item}
