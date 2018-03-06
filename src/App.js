@@ -77,7 +77,7 @@ class App extends Component {
               path="/onedrive/signin"
               render={() =>
                 (window.location =
-                  'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=a7fba33d-f054-47c3-92d3-27978004647d&scope=onedrive.readwrite' +
+                  'https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=a7fba33d-f054-47c3-92d3-27978004647d&scope=files.readwrite.all' +
                   '&response_type=token&redirect_uri=' +
                   encodeURIComponent('http://localhost:3000/onedrive/callback'))
               }
