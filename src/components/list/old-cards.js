@@ -20,27 +20,6 @@ export const Sell = item => ({
   )
 })
 
-export const Documents = item => ({
-  key: 'documents',
-  rows: item.documents === undefined ? 0 : item.documents.length,
-  predicate: () => item.documents.length > 0,
-  card: () => (
-    <Card title="Documents">
-      <p className="card-text">
-        {item.documents.map(doc => (
-          <Fragment key={doc.file}>
-            <strong>{doc.type}</strong>:{' '}
-            <a href={`${process.env.REACT_APP_SERVER_URI}?file=${encodeURIComponent(doc.file)}`} target="_blank">
-              view
-            </a>
-            <br />
-          </Fragment>
-        ))}
-      </p>
-    </Card>
-  )
-})
-
 export const WriteOff = item => ({
   key: 'write-off',
   rows: (res => (res === null ? 0 : 7))(item.calculation.absolute),

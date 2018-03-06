@@ -5,6 +5,7 @@ import fs from 'fs'
 import morgan from 'morgan'
 import path from 'path'
 import { MongoClient } from 'mongodb'
+import fileUpload from 'express-fileupload'
 
 import assets from './app/assets'
 
@@ -38,6 +39,8 @@ app.use((req, res, next) => {
 
   next()
 })
+
+app.use(fileUpload())
 
 MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
   if (err) {

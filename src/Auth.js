@@ -62,7 +62,7 @@ export default class Auth {
 
   handleOneDriveAuthentication = hash => {
     if (/access_token=([^&]+)/.exec(hash)[1] !== undefined) {
-      localStorage.setItem('onedrive_access_token', /access_token=([^&]+)/.exec(hash)[1])
+      localStorage.setItem('onedrive_access_token', decodeURIComponent(/access_token=([^&]+)/.exec(hash)[1]))
       history.replace('/')
     }
   }

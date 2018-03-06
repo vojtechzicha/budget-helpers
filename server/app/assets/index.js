@@ -1,5 +1,9 @@
 import { Router } from 'express'
 import { ObjectID } from 'mongodb'
+import { createReadStream } from 'streamifier'
+import oneDriveApi from 'onedrive-api'
+import uuid from 'uuid/v4'
+import { extname } from 'path'
 
 import checkJwt from '../../checkJwt'
 
@@ -89,6 +93,43 @@ app.delete('/item/:id', checkJwt, async (req, res, next) => {
     res.sendStatus(204)
   } catch (e) {
     next(e)
+  }
+})
+
+app.put('/item/:id/document', checkJwt, async (req, res, next) => {
+  const id = uuid()
+  const db = req.app.locals.db
+
+  try {
+    console.log('start')
+    const apiRes = await oneDriveApi.items.uploadSimple({
+      accessToken: req.headers['x-onedrive-token'],
+      filename: `${id}${extname(req.files.file.name)}`,
+      readableStream: createReadStream(req.files.file.data),
+      parentPath: `/DMS/Assets/${req.params.id}`
+    })
+
+    await db
+      .collection('assets_item')
+      .updateOne(
+        { _id: ObjectID(req.params.id) },
+        {
+          $push: {
+            documents: {
+              id,
+              key: 'New Document',
+              filename: req.files.file.name,
+              oneDriveId: apiRes.id,
+              oneDriveUrl: apiRes['@microsoft.graph.downloadUrl']
+            }
+          }
+        }
+      )
+
+    res.sendStatus(201)
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(500)
   }
 })
 
