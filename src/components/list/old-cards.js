@@ -4,22 +4,6 @@ import moment from 'moment'
 // import { formatCurrency } from './../../helpers'
 import Card from './cards/Card'
 
-export const Sell = item => ({
-  key: 'sell',
-  rows: item.sell !== undefined ? 3 : 0,
-  card: () => (
-    <Card title="Sold">
-      <p className="card-text">
-        <strong>Date</strong>: {moment(item.sell.date).format('MMMM Do, YYYY')}
-        <br />
-        <strong>Amount</strong>: {formatCurrency(item.sell.accountingCurrencyAmount)}
-        <br />
-        <strong>Original Amount</strong>: {formatCurrency(item.sell.originalCurrencyAmount, ` ${item.sell.originalCurrency}`)}
-      </p>
-    </Card>
-  )
-})
-
 export const WriteOff = item => ({
   key: 'write-off',
   rows: (res => (res === null ? 0 : 7))(item.calculation.absolute),
