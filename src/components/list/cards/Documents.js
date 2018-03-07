@@ -183,7 +183,7 @@ class DocumentsCard extends Component {
           </form>
         ) : (
           <div className="card-text">
-            {documents.map(doc => (
+            {(documents || []).map(doc => (
               <div key={doc.id} onMouseEnter={() => this.setState({ hover: doc.id })} onMouseLeave={() => this.setState({ hover: -2 })}>
                 {editing === doc.id ? (
                   <EditingRow doc={doc} onSubmit={this.handleEdit} onCancel={() => this.setState({ editingIndex: -2 })} />
