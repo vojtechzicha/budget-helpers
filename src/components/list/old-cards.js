@@ -187,28 +187,6 @@ export const Month = item => ({
   }
 })
 
-export const Accessories = item => ({
-  key: 'accessories',
-  rows: item.accessories !== undefined ? item.accessories.length * 4 : 0,
-  card: () => (
-    <Card title="Accessories">
-      {item.accessories.map((acc, i) => (
-        <p className="card-text" key={i}>
-          <strong>
-            <u>{acc.type}</u>
-          </strong>
-          <br />
-          {acc.name}
-          <br />
-          <strong>Value</strong>: {formatCurrency(acc.accountingCurrencyAmount)}
-          <br />
-          <strong>Since</strong>: {moment(acc.invoiceDate).format('MMMM Do, YYYY')}
-        </p>
-      ))}
-    </Card>
-  )
-})
-
 export const AdditionalCosts = item => ({
   key: 'additionalCosts',
   rows: item.additionalCosts !== undefined ? item.additionalCosts.length * 3 : 0,
