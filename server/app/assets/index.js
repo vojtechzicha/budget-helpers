@@ -109,26 +109,44 @@ app.put('/item/:id/document', checkJwt, async (req, res, next) => {
       parentPath: `/DMS/Assets/${req.params.id}`
     })
 
-    await db
-      .collection('assets_item')
-      .updateOne(
-        { _id: ObjectID(req.params.id) },
-        {
-          $push: {
-            documents: {
-              id,
-              key: 'New Document',
-              filename: req.files.file.name,
-              oneDriveId: apiRes.id,
-              oneDriveUrl: apiRes['@microsoft.graph.downloadUrl']
-            }
+    await db.collection('assets_item').updateOne(
+      { _id: ObjectID(req.params.id) },
+      {
+        $push: {
+          documents: {
+            id,
+            key: 'New Document',
+            filename: req.files.file.name,
+            oneDriveId: apiRes.id,
+            oneDriveUrl: apiRes['@microsoft.graph.downloadUrl']
           }
         }
-      )
+      }
+    )
 
     res.sendStatus(201)
   } catch (e) {
     console.log(e)
+    res.sendStatus(500)
+  }
+})
+
+app.get('/item/:id/document/:docId', checkJwt, async (req, res, next) => {
+  const db = req.app.locals.db
+
+  try {
+    const item = await db.collection('assets_item').findOne({ _id: ObjectID(req.params.id) }, { documents: 1, _id: 0 })
+    const doc = item.documents.find(doc => doc.id === req.params.docId)
+
+    const apiRes = await oneDriveApi.items.getMetadata({
+      accessToken: req.headers['x-onedrive-token'],
+      itemId: doc.oneDriveId
+    })
+
+    console.log(apiRes)
+    res.json({ link: apiRes['@microsoft.graph.downloadUrl'] })
+  } catch (e) {
+    console.error(e)
     res.sendStatus(500)
   }
 })

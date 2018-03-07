@@ -6,12 +6,6 @@ import Yup from 'yup'
 
 import Card from './Card'
 
-const StaticRow = ({ doc: { key, filename, oneDriveUrl } }) => (
-  <a href={oneDriveUrl} target="_blank" title={filename}>
-    {key} [{filename.substr(filename.lastIndexOf('.') + 1, filename.length - 4).toUpperCase()}]
-  </a>
-)
-
 const EditingRow = ({ doc, onSubmit, onCancel }) => (
   <Formik
     initialValues={{ key: doc.key }}
@@ -54,7 +48,8 @@ class DocumentsCard extends Component {
   state = {
     adding: false,
     hover: -2,
-    editing: -2
+    editing: -2,
+    links: {}
   }
 
   uploadInput = null
@@ -132,9 +127,26 @@ class DocumentsCard extends Component {
     onUpdate()
   }
 
+  handleLoadDocLink = async docId => {
+    const { fetch, item: { _id }, auth } = this.props
+
+    if (this.state.links[docId] !== undefined) return
+
+    const res = await fetch(
+      'assets',
+      `item/${_id}/document/${docId}`,
+      {},
+      {
+        'X-OneDrive-Token': auth.getOneDriveToken()
+      }
+    ).then(res => res.json())
+
+    this.setState(({ links }) => ({ links: { ...links, [docId]: res.link } }))
+  }
+
   render() {
     const { auth, item: { documents } } = this.props
-    const { adding, hover, editing } = this.state
+    const { adding, hover, editing, links } = this.state
 
     return !auth.isOneDriveAuthenticated() ? (
       <Card title="Documents" subtitle="OneDrive signed out">
@@ -177,7 +189,20 @@ class DocumentsCard extends Component {
                   <EditingRow doc={doc} onSubmit={this.handleEdit} onCancel={() => this.setState({ editingIndex: -2 })} />
                 ) : (
                   <Fragment>
-                    <StaticRow doc={doc} />
+                    <a
+                      href={links[doc.id] !== undefined ? links[doc.id] : '/'}
+                      target="_blank"
+                      title={doc.filename}
+                      onClick={e => {
+                        if (links[doc.id] === undefined) {
+                          this.handleLoadDocLink(doc.id)
+                          e.preventDefault()
+                          e.stopPropagation()
+                        }
+                      }}
+                      onMouseEnter={() => this.handleLoadDocLink(doc.id)}>
+                      {doc.key} [{doc.filename.substr(doc.filename.lastIndexOf('.') + 1, doc.filename.length - 4).toUpperCase()}]
+                    </a>
                     {hover === doc.id && (
                       <Fragment>
                         <button
