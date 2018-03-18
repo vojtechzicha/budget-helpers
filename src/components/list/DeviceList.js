@@ -26,7 +26,8 @@ class DeviceList extends Component {
       ].push(card)
     })
 
-    const buttons = cards.filter(card => card.rows === 0 && card.new !== undefined).map(card => card.new)
+    let buttons = cards.filter(card => card.rows === 0 && card.new !== undefined).map(card => card.new)
+    buttons.sort((a, b) => (a.label > b.label ? 1 : a.label < b.label ? -1 : 0))
     return (
       <div>
         <h2>
