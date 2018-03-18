@@ -3,23 +3,6 @@ import moment from 'moment'
 
 import Card from './Card'
 
-export const Invoice = item => ({
-  key: 'invoice',
-  rows: 3,
-  card: () => (
-    <Card title="Invoice">
-      <p className="card-text">
-        <strong>Date</strong>: {moment(item.invoice.date).format('MMMM Do, YYYY')}
-        <br />
-        <strong>Amount</strong>: {item.invoice.accountingCurrencyAmount.toLocaleString('cs-CZ', { style: 'currency', currency: 'CZK' })}
-        <br />
-        <strong>Original Amount</strong>:{' '}
-        {item.invoice.originalCurrencyAmount.toLocaleString('cs-CZ', { style: 'currency', currency: item.invoice.originalCurrency })}
-      </p>
-    </Card>
-  )
-})
-
 export const ExpiredWarranty = item => ({
   key: 'expired-warranty',
   rows: moment().isAfter(moment(item.invoice.date).add(item.warranty, 'months')) ? 3 : 0,
