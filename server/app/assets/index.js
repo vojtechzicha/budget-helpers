@@ -101,7 +101,6 @@ app.put('/item/:id/document', checkJwt, async (req, res, next) => {
   const db = req.app.locals.db
 
   try {
-    console.log('start')
     const apiRes = await oneDriveApi.items.uploadSimple({
       accessToken: req.headers['x-onedrive-token'],
       filename: `${id}${extname(req.files.file.name)}`,
@@ -126,7 +125,6 @@ app.put('/item/:id/document', checkJwt, async (req, res, next) => {
 
     res.sendStatus(201)
   } catch (e) {
-    console.log(e)
     res.sendStatus(500)
   }
 })
@@ -143,7 +141,6 @@ app.get('/item/:id/document/:docId', checkJwt, async (req, res, next) => {
       itemId: doc.oneDriveId
     })
 
-    console.log(apiRes)
     res.json({ link: apiRes['@microsoft.graph.downloadUrl'] })
   } catch (e) {
     console.error(e)

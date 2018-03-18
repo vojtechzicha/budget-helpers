@@ -53,7 +53,6 @@ class DeviceList extends Component {
                           await button.handleNew(item, fetch)
                           onUpdate()
                         }}>
-                        {true && console.log(button)}
                         {button.label}
                       </button>
                     ))}

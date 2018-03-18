@@ -40,7 +40,6 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
       invoiceDate: Yup.number().required('invoiceDate must be provided')
     })}
     onSubmit={async (values, { setSubmitting }) => {
-      console.log(values)
       await onSubmit(val.id, {
         type: values.type,
         name: values.name,
@@ -176,7 +175,6 @@ class KeyAmountCard extends Component {
         <div className="card-text">
           {item[itemKey].map(val => (
             <div key={val.id} onMouseEnter={() => this.setState({ hover: val.id })} onMouseLeave={() => this.setState({ hover: -2 })}>
-              {console.log(val)}
               {editingIndex === val.id ? (
                 <EditingRow val={val} onSubmit={this.handleEdit} onCancel={() => this.setState({ editingIndex: -2 })} />
               ) : (
