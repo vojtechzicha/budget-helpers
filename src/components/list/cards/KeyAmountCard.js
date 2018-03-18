@@ -89,6 +89,8 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
               value={values.invoiceDate}
             />
           </div>
+        </div>
+        <div className="form-row">
           <div className="col">
             <input
               type="number"
