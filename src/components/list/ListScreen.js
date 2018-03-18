@@ -66,7 +66,8 @@ class ListScreen extends Component {
     items: [],
     item: 'loading',
     redirect: null,
-    form: null
+    form: null,
+    models: []
   }
 
   componentDidUpdate() {
@@ -83,6 +84,7 @@ class ListScreen extends Component {
 
   async componentDidMount() {
     this.updateItem(null)
+    this.updateModels()
   }
 
   async componentWillReceiveProps(newProps) {
@@ -106,6 +108,11 @@ class ListScreen extends Component {
       item,
       form: 'default'
     })
+  }
+
+  async updateModels() {
+    const models = await this.props.fetch('assets', 'item-models').then(res => res.json())
+    this.setState({ models })
   }
 
   handleRemove = async () => {
@@ -218,11 +225,11 @@ class ListScreen extends Component {
             </div>
             <div className="col-sm-9">
               {form === 'create' ? (
-                <UpsertForm item={null} onSubmit={this.handleUpsertCreateSubmit} />
+                <UpsertForm item={null} onSubmit={this.handleUpsertCreateSubmit} models={this.state.models} />
               ) : item === 'loading' ? (
                 <h3>Loading</h3>
               ) : form === 'edit' ? (
-                <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} />
+                <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} models={this.state.models} />
               ) : (
                 <DeviceList
                   item={item}

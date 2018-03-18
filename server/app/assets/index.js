@@ -9,6 +9,11 @@ import checkJwt from '../../checkJwt'
 
 const app = Router()
 
+const prepareItem = item => ({
+  ...item,
+  model: ObjectID(item.model.valueOf())
+})
+
 app.get('/items', checkJwt, async (req, res, next) => {
   try {
     const db = req.app.locals.db
@@ -54,7 +59,7 @@ app.post('/item/:id', checkJwt, async (req, res, next) => {
   try {
     const db = req.app.locals.db
 
-    const mongoRes = await db.collection('assets_item').updateOne({ _id: ObjectID(req.params.id) }, { $set: req.body })
+    const mongoRes = await db.collection('assets_item').updateOne({ _id: ObjectID(req.params.id) }, { $set: prepareItem(req.body) })
 
     if (mongoRes.result.ok === 1 && mongoRes.result.n === 1) {
       res.json({ status: 'ok' })
@@ -72,7 +77,7 @@ app.put('/item', checkJwt, async (req, res, next) => {
   try {
     const db = req.app.locals.db
 
-    const mongoRes = await db.collection('assets_item').insertOne(req.body)
+    const mongoRes = await db.collection('assets_item').insertOne(prepareItem(req.body))
 
     if (mongoRes.result.ok === 1 && mongoRes.result.n === 1) {
       res.json({ status: 'ok', id: mongoRes.insertedId })
@@ -142,6 +147,24 @@ app.get('/item/:id/document/:docId', checkJwt, async (req, res, next) => {
     })
 
     res.json({ link: apiRes['@microsoft.graph.downloadUrl'] })
+  } catch (e) {
+    console.error(e)
+    res.sendStatus(500)
+  }
+})
+
+app.get('/item-models', checkJwt, async (req, res, next) => {
+  const db = req.app.locals.db
+
+  try {
+    const models = await db
+      .collection('assets_model')
+      .find({})
+      .project({ label: 1, _id: 1 })
+      .sort({ label: 1 })
+      .toArray()
+
+    res.json(models)
   } catch (e) {
     console.error(e)
     res.sendStatus(500)
