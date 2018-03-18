@@ -27,7 +27,7 @@ const Details = item => ({
       )
     }
   },
-  card: fetch => (
+  card: (fetch, onUpdate) => (
     <KeyValueCard
       item={item}
       itemKey="details"
@@ -53,6 +53,7 @@ const Details = item => ({
           }
         )
 
+        onUpdate()
         return newDetails
       }}
       handleEdit={async (item, i, detail) => {
@@ -75,6 +76,7 @@ const Details = item => ({
           }
         )
 
+        onUpdate()
         return newDetails
       }}
       handleCreate={async item => {
@@ -97,6 +99,7 @@ const Details = item => ({
           }
         )
 
+        onUpdate()
         return newDetails
       }}
     />

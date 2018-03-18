@@ -65,18 +65,15 @@ const EditingRow = ({ i, val, onSubmit, onCancel }) => (
 class KeyValueCard extends Component {
   state = {
     editingIndex: -2,
-    hover: false,
-    item: this.props.item
+    hover: false
   }
 
   handleEdit = async (i, val) => {
-    const { item } = this.state
-    const { itemKey, handleEdit } = this.props
+    const { itemKey, handleEdit, item } = this.props
 
     const newVal = await handleEdit(item, i, val)
 
     this.setState({
-      item: { ...item, [itemKey]: newVal },
       editingIndex: -2
     })
   }
@@ -88,7 +85,6 @@ class KeyValueCard extends Component {
     const newVal = await handleCreate(item)
 
     this.setState({
-      item: { ...item, [itemKey]: newVal },
       editingIndex: newVal.length - 1
     })
   }
@@ -98,15 +94,11 @@ class KeyValueCard extends Component {
     const { itemKey, handleRemove } = this.props
 
     const newVal = await handleRemove(item, i)
-
-    this.setState({
-      item: { ...item, [itemKey]: newVal }
-    })
   }
 
   render() {
-    const { editingIndex, hover, item } = this.state
-    const { itemKey, label } = this.props
+    const { editingIndex, hover } = this.state
+    const { itemKey, label, item } = this.props
 
     return (
       <Card
