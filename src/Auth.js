@@ -14,6 +14,7 @@ export default class Auth {
   token = null
 
   login = () => {
+    localStorage.removeItem('onedrive_access_token')
     this.auth0.authorize()
   }
 
