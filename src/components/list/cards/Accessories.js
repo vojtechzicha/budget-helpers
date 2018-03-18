@@ -69,7 +69,13 @@ const Accessories = item => ({
       handleEdit={async (item, id, accessory) => {
         const { _id, accessories } = item
 
-        const newAccessories = [...accessories.filter(acc => acc.id !== id), accessory]
+        const newAccessories = [
+          ...accessories.filter(acc => acc.id !== id),
+          {
+            ...accessories.find(acc => acc.id === id),
+            ...accessory
+          }
+        ]
 
         await fetch(
           'assets',
