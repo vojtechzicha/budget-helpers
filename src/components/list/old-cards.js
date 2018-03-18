@@ -186,23 +186,3 @@ export const Month = item => ({
     )
   }
 })
-
-export const AdditionalCosts = item => ({
-  key: 'additionalCosts',
-  rows: item.additionalCosts !== undefined ? item.additionalCosts.length * 3 : 0,
-  card: () => (
-    <Card title="Additional Costs">
-      <p className="card-text">
-        {item.additionalCosts.map((ac, i) => (
-          <Fragment key={i}>
-            <u>{ac.description}</u>
-            <br />
-            <strong>Value</strong>: {formatCurrency(ac.accountingCurrencyAmount)}
-            <br />
-            <strong>Since</strong>: {moment(ac.invoiceDate).format('MMMM Do, YYYY')}
-          </Fragment>
-        ))}
-      </p>
-    </Card>
-  )
-})
