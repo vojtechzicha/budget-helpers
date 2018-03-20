@@ -12,7 +12,7 @@ const app = Router()
 
 const prepareItem = item => ({
   ...item,
-  model: ObjectID(item.model.valueOf())
+  ...(item.model !== undefined && item.model !== null ? { model: ObjectID(item.model.valueOf()) } : {})
 })
 
 app.get('/items', checkJwt, async (req, res, next) => {
