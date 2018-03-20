@@ -97,6 +97,9 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
               className="form-control"
               placeholder="amount"
               name="amount"
+              min="0"
+              step="0.01"
+              pattern="^\d+(?:\.\d{1,2})?$"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.amount}

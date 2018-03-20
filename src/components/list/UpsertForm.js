@@ -7,7 +7,17 @@ import Select from 'react-select'
 const Input = ({ name, label, type = 'text', values, errors, touched, handleChange, handleBlur }) => (
   <div className="form-group">
     <label htmlFor={name}>{label}</label>
-    <input type={type} className="form-control" id={name} name={name} onChange={handleChange} onBlur={handleBlur} value={values[name]} />
+    <input
+      type={type}
+      step={type === 'number' ? '0.01' : null}
+      pattern={type === 'number' ? '^d+(?:.d{1,2})?$' : null}
+      className="form-control"
+      id={name}
+      name={name}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      value={values[name]}
+    />
     {touched[name] &&
       errors[name] && (
         <small className="form-text" style={{ color: 'red' }}>
