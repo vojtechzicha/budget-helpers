@@ -10,7 +10,6 @@ const Input = ({ name, label, type = 'text', values, errors, touched, handleChan
     <input
       type={type}
       step={type === 'number' ? '0.01' : null}
-      pattern={type === 'number' ? '^d+(?:.d{1,2})?$' : null}
       className="form-control"
       id={name}
       name={name}
