@@ -36,8 +36,8 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
     validationSchema={Yup.object().shape({
       type: Yup.string().required('type must be provided'),
       name: Yup.string().required('name must be provided'),
-      amount: Yup.date().required('amount must be provided'),
-      invoiceDate: Yup.number().required('invoiceDate must be provided')
+      amount: Yup.number().required('amount must be provided'),
+      invoiceDate: Yup.date().required('invoiceDate must be provided')
     })}
     onSubmit={async (values, { setSubmitting }) => {
       await onSubmit(val.id, {
