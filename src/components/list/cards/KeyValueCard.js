@@ -79,8 +79,7 @@ class KeyValueCard extends Component {
   }
 
   handleCreate = async () => {
-    const { item } = this.state
-    const { itemKey, handleCreate } = this.props
+    const { itemKey, handleCreate, item } = this.props
 
     const newVal = await handleCreate(item)
 
@@ -90,8 +89,7 @@ class KeyValueCard extends Component {
   }
 
   handleRemove = async (i, val) => {
-    const { item } = this.state
-    const { itemKey, handleRemove } = this.props
+    const { itemKey, handleRemove, item } = this.props
 
     const newVal = await handleRemove(item, i)
   }
