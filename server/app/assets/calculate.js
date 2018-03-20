@@ -139,6 +139,8 @@ const calculateAccessories = (item, last) => {
     )
 }
 
+const isItemSold = (item, last) => (item.sell !== undefined && item.sell.date !== undefined ? moment(item.sell.date).isBefore(last) : false)
+
 export const calculateItemAbsolute = (item, model, month) => {
   const first = moment(`${month.substring(0, 4)}-${month.substring(5, 7)}-01`, 'YYYY-MM-DD'),
     last = first
@@ -148,28 +150,56 @@ export const calculateItemAbsolute = (item, model, month) => {
 
   const initialValue = item.invoice.accountingCurrencyAmount
 
-  const valueWriteOff = calculateValueWriteOff(item, model, first)
-
   const additionalCosts = calculateAdditionalCosts(item, last)
   const { accessories, accessorryWriteOff } = calculateAccessories(item, last)
 
   const investment = initialValue + additionalCosts + accessories
 
-  const investmentWriteOff = accessorryWriteOff + additionalCosts,
-    writeOff = valueWriteOff + investmentWriteOff
+  const investmentWriteOff = accessorryWriteOff + additionalCosts
 
-  const currentValue = investment - writeOff
+  console.log(item.sell.date, last.toString())
+  if (!isItemSold(item, last)) {
+    const valueWriteOff = calculateValueWriteOff(item, model, first),
+      writeOff = investmentWriteOff + valueWriteOff,
+      currentValue = investment - writeOff
 
-  return {
-    initialValue,
-    appliedDamages: 0,
-    additionalCosts,
-    accessories,
-    investment,
-    investmentWriteOff,
-    writeOff,
-    currentValue,
-    soldValue: null
-    // profit
+    return {
+      initialValue,
+      appliedDamages: 0,
+      additionalCosts,
+      accessories,
+      investment,
+      investmentWriteOff,
+      writeOff,
+      currentValue,
+      soldValue: null
+      // profit
+    }
+  } else {
+    console.log('here')
+    const sellDate = moment(item.sell.date),
+      sellAmount = item.sell.accountingCurrencyAmount
+    const sellFirst = moment(`${sellDate.get('year')}-${sellDate.get('month')}-01`, 'YYYY-M-D'),
+      sellLast = sellFirst
+        .clone()
+        .add(1, 'month')
+        .add(-1, 'day')
+
+    const valueWriteOff = calculateValueWriteOff(item, model, sellFirst),
+      writeOff = investmentWriteOff + valueWriteOff,
+      currentValue = investment - writeOff
+
+    return {
+      initialValue,
+      appliedDamages: 0,
+      additionalCosts,
+      accessories,
+      investment,
+      investmentWriteOff,
+      writeOff,
+      currentValue: 0,
+      soldValue: sellAmount,
+      profit: sellAmount - currentValue
+    }
   }
 }

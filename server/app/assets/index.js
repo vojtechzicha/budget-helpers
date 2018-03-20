@@ -4,6 +4,7 @@ import { createReadStream } from 'streamifier'
 import oneDriveApi from 'onedrive-api'
 import uuid from 'uuid/v4'
 import { extname } from 'path'
+import moment from 'moment'
 
 import checkJwt from '../../checkJwt'
 import { calculateItemAbsolute } from './calculate'
@@ -37,10 +38,12 @@ app.get('/item/:id', checkJwt, async (req, res, next) => {
     const item = await db.collection('assets_item').findOne({ _id: ObjectID(req.params.id) })
     const model = await db.collection('assets_model').findOne({ _id: item.model })
 
+    const currentMonth = moment().format('YYYY-MM')
+
     res.json({
       ...item,
       calculation: {
-        absolute: calculateItemAbsolute(item, model, '2018-03'),
+        absolute: calculateItemAbsolute(item, model, currentMonth),
         relative: null
       }
     })
