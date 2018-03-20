@@ -78,7 +78,7 @@ class App extends Component {
               render={() =>
                 (window.location =
                   `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=a7fba33d-f054-47c3-92d3-27978004647d&scope=files.readwrite.all` +
-                  `&response_type=token&redirect_uri=${encodeURIComponent(`${process.env.PUBLIC_URL}/onedrive/callback`)}`)
+                  `&response_type=token&redirect_uri=${encodeURIComponent(`${process.env.REACT_APP_CALLBACK_ADDRESS}/onedrive/callback`)}`)
               }
             />
             <Route
