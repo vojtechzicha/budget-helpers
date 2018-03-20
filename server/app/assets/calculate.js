@@ -92,7 +92,7 @@ const calculateValueWriteOffAfterWarranty = (item, model, first) => {
   const chosen = afterWarranties.find(aw => monthsAfterWarranty >= aw.min && monthsAfterWarranty < aw.max)
 
   if (chosen === undefined) {
-    return item.invoice.accountingCurrencyAmount * afterWarranties[afterWarranties.length - 1].value
+    return item.invoice.accountingCurrencyAmount * (1 - afterWarranties[afterWarranties.length - 1].value)
   } else {
     let from = warrantyChecks[warrantyChecks.length - 1].value,
       found = false
@@ -124,7 +124,6 @@ const calculateAdditionalCosts = (item, last) => {
 }
 
 const calculateAccessories = (item, last) => {
-  console.log(last)
   return (item.accessories || [])
     .map(ac => ({ value: ac.accountingCurrencyAmount, date: moment(ac.invoiceDate) }))
     .filter(ac => ac.date.isBefore(last))
@@ -147,17 +146,16 @@ export const calculateItemAbsolute = (item, model, month) => {
       .add(1, 'month')
       .add(-1, 'day')
 
-  const initialInvestment = item.invoice.accountingCurrencyAmount,
-    initialValue = initialInvestment
+  const initialValue = item.invoice.accountingCurrencyAmount
 
   const valueWriteOff = calculateValueWriteOff(item, model, first)
 
   const additionalCosts = calculateAdditionalCosts(item, last)
   const { accessories, accessorryWriteOff } = calculateAccessories(item, last)
 
-  const investment = initialInvestment + additionalCosts + accessories
+  const investment = initialValue + additionalCosts + accessories
 
-  const investmentWriteOff = accessorryWriteOff,
+  const investmentWriteOff = accessorryWriteOff + additionalCosts,
     writeOff = valueWriteOff + investmentWriteOff
 
   const currentValue = investment - writeOff
@@ -169,8 +167,8 @@ export const calculateItemAbsolute = (item, model, month) => {
     accessories,
     investment,
     investmentWriteOff,
-    writeOff: writeOff,
-    currentValue: currentValue,
+    writeOff,
+    currentValue,
     soldValue: null
     // profit
   }
