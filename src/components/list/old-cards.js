@@ -3,6 +3,7 @@ import moment from 'moment'
 
 // import { formatCurrency } from './../../helpers'
 import Card from './cards/Card'
+const formatCurrency = curr => curr.toLocaleString('cs-CZ', { style: 'currency', currency: 'CZK' })
 
 export const WriteOff = item => ({
   key: 'write-off',

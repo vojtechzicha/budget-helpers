@@ -6,6 +6,7 @@ import uuid from 'uuid/v4'
 import { extname } from 'path'
 
 import checkJwt from '../../checkJwt'
+import { calculateItemAbsolute } from './calculate'
 
 const app = Router()
 
@@ -33,10 +34,13 @@ app.get('/item/:id', checkJwt, async (req, res, next) => {
   try {
     const db = req.app.locals.db
 
+    const item = await db.collection('assets_item').findOne({ _id: ObjectID(req.params.id) })
+    const model = await db.collection('assets_model').findOne({ _id: item.model })
+
     res.json({
-      ...(await db.collection('assets_item').findOne({ _id: ObjectID(req.params.id) })),
+      ...item,
       calculation: {
-        absolute: null,
+        absolute: calculateItemAbsolute(item, model, '2018-03'),
         relative: null
       }
     })

@@ -9,4 +9,18 @@ import Invoice from './Invoice'
 
 import { ExpiredWarranty, ValidWarranty } from './Warranty'
 
-export default [Details, SerialKey, Invoice, ExpiredWarranty, ValidWarranty, Identifiers, Documents, Sell, Accessories, AdditionalCosts]
+import { WriteOff } from './../old-cards'
+
+export default [
+  Details,
+  SerialKey,
+  Invoice,
+  ExpiredWarranty,
+  ValidWarranty,
+  Identifiers,
+  Documents,
+  Sell,
+  Accessories,
+  AdditionalCosts,
+  WriteOff
+]
