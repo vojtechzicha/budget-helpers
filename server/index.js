@@ -43,6 +43,7 @@ app.use((req, res, next) => {
 app.use(fileUpload())
 
 MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
+  console.log(process.env.MONGO_URI)
   if (err) {
     console.error('No connection to the database')
     throw err

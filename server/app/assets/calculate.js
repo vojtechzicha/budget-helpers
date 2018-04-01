@@ -130,7 +130,7 @@ const calculateAccessories = (item, last) => {
     .reduce(
       (pr, cu) => ({
         accessories: pr.accessories + cu.value,
-        accessorryWriteOff: pr.accessorryWriteOff + cu.value * 0.2
+        accessorryWriteOff: pr.accessorryWriteOff + cu.value * 0.8
       }),
       {
         accessories: 0,
@@ -142,11 +142,12 @@ const calculateAccessories = (item, last) => {
 const isItemSold = (item, last) => (item.sell !== undefined && item.sell.date !== undefined ? moment(item.sell.date).isBefore(last) : false)
 
 export const calculateItemAbsolute = (item, model, month) => {
-  const first = moment(`${month.substring(0, 4)}-${month.substring(5, 7)}-01`, 'YYYY-MM-DD'),
+  const first = moment(`${month.substring(0, 4)}-${month.substring(4, 6)}-01`, 'YYYY-MM-DD'),
     last = first
       .clone()
       .add(1, 'month')
       .add(-1, 'day')
+  console.log('absolute', month, first, last)
 
   const initialValue = item.invoice.accountingCurrencyAmount
 
@@ -157,6 +158,20 @@ export const calculateItemAbsolute = (item, model, month) => {
 
   const investmentWriteOff = accessorryWriteOff + additionalCosts
 
+  if (last.isBefore(item.invoice.date)) {
+    return {
+      initialValue: 0,
+      appliedDamages: 0,
+      additionalCosts: 0,
+      accessories: 0,
+      investment: 0,
+      investmentWriteOff: 0,
+      writeOff: 0,
+      currentValue: 0,
+      soldValue: null,
+      profit: null
+    }
+  }
   if (!isItemSold(item, last)) {
     const valueWriteOff = calculateValueWriteOff(item, model, first),
       writeOff = investmentWriteOff + valueWriteOff,
@@ -175,7 +190,6 @@ export const calculateItemAbsolute = (item, model, month) => {
       profit: null
     }
   } else {
-    console.log('here')
     const sellDate = moment(item.sell.date),
       sellAmount = item.sell.accountingCurrencyAmount
     const sellFirst = moment(`${sellDate.get('year')}-${sellDate.get('month')}-01`, 'YYYY-M-D'),
@@ -204,13 +218,11 @@ export const calculateItemAbsolute = (item, model, month) => {
 }
 
 export const calculateItemRelative = (item, model, month) => {
-  const first = moment(`${month.substring(0, 4)}-${month.substring(5, 7)}-01`, 'YYYY-MM-DD')
+  const first = moment(`${month.substring(0, 4)}-${month.substring(4, 6)}-01`, 'YYYY-MM-DD')
   const previousMonth = first
     .clone()
     .add(-1, 'month')
-    .format('YYYY-MM')
-
-  console.log(month, previousMonth)
+    .format('YYYYMM')
 
   const previousCalc = calculateItemAbsolute(item, model, previousMonth),
     thisCalc = calculateItemAbsolute(item, model, month)
@@ -255,4 +267,86 @@ export const calculateItemRelative = (item, model, month) => {
       profit: null
     }
   }
+}
+
+export const calculateBudget = (items, models, month) => {
+  let result = {
+    previousValue: 0,
+    previousValues: [],
+    appliedDamages: 0,
+    appliedDamageItems: [],
+    additionalCosts: 0,
+    additionalCostItems: [],
+    accessories: 0,
+    accessoryItems: [],
+    introductionCost: 0,
+    introductedItems: [],
+    investment: 0,
+    investedItems: [],
+    investmentWriteOff: 0,
+    investmentWriteOffItems: [],
+    writeOff: 0,
+    writtenOffItems: [],
+    currentValue: 0,
+    currentValues: [],
+    soldValue: 0,
+    soldValues: [],
+    profit: 0,
+    profits: []
+  }
+
+  items.forEach(item => {
+    const model = models[0]
+    console.log(model, item.model.valueOf())
+    const res = calculateItemRelative(item, model, month)
+
+    result.previousValue += res.previousValue
+    if (res.previousValue !== 0) {
+      result.previousValues.push({ title: item.title, subtitle: null, amount: res.previousValue })
+    }
+    result.appliedDamages += res.appliedDamages
+    // if (res.previousValue !== 0) {
+    //   result.previousValues.push({title: item.title, subtitle: null, amount: res.previousValue})
+    // }
+    result.additionalCosts += res.additionalCosts
+    if (res.additionalCosts !== 0) {
+      result.additionalCostItems.push({ title: item.title, subtitle: null, amount: res.additionalCosts })
+    }
+    result.accessories += res.accessories
+    if (res.accessories !== 0) {
+      result.accessoryItems.push({ title: item.title, subtitle: null, amount: res.accessories })
+    }
+    result.investment += res.investment
+    if (res.investment !== 0) {
+      result.investedItems.push({ title: item.title, subtitle: null, amount: res.investment })
+    }
+    result.introductionCost += res.investment - res.accessories - res.additionalCosts
+    if (res.investment - res.accessories - res.additionalCosts !== 0) {
+      result.introductedItems.push({ title: item.title, subtitle: null, amount: res.investment - res.accessories - res.additionalCosts })
+    }
+    result.investmentWriteOff += res.investmentWriteOff
+    if (res.investmentWriteOff !== 0) {
+      result.investmentWriteOffItems.push({ title: item.title, subtitle: null, amount: res.investmentWriteOff })
+    }
+    result.writeOff += res.writeOff
+    if (res.writeOff !== 0) {
+      result.writtenOffItems.push({ title: item.title, subtitle: null, amount: res.writeOff })
+    }
+    result.currentValue += res.currentValue
+    if (res.currentValue !== 0) {
+      result.currentValues.push({ title: item.title, subtitle: null, amount: res.currentValue })
+    }
+    if (res.soldValue !== null) {
+      result.soldValue += res.soldValue
+      if (res.soldValue !== 0) {
+        result.soldValues.push({ title: item.title, subtitle: null, amount: res.soldValue })
+      }
+      result.profit += res.profit
+      if (res.profit !== 0) {
+        result.profits.push({ title: item.title, subtitle: null, amount: res.profit })
+      }
+    }
+  })
+
+  return result
 }

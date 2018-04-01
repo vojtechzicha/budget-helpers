@@ -7,7 +7,7 @@ import { extname } from 'path'
 import moment from 'moment'
 
 import checkJwt from '../../checkJwt'
-import { calculateItemAbsolute, calculateItemRelative } from './calculate'
+import { calculateItemAbsolute, calculateItemRelative, calculateBudget } from './calculate'
 
 const app = Router()
 
@@ -38,13 +38,15 @@ app.get('/item/:id', checkJwt, async (req, res, next) => {
     const item = await db.collection('assets_item').findOne({ _id: ObjectID(req.params.id) })
     const model = await db.collection('assets_model').findOne({ _id: item.model })
 
-    const currentMonth = moment().format('YYYY-MM')
+    const currentMonth = moment().format('YYYYMM')
 
     res.json({
       ...item,
       calculation: {
-        absolute: calculateItemAbsolute(item, model, currentMonth),
-        relative: calculateItemRelative(item, model, currentMonth)
+        ...(req.query.absolute !== undefined ? { absolute: calculateItemAbsolute(item, model, currentMonth) } : {}),
+        ...(req.query.relative !== undefined
+          ? { relative: calculateItemRelative(item, model, req.query.relative.length === undefined ? currentMonth : req.query.relative) }
+          : {})
       }
     })
   } catch (e) {
@@ -172,6 +174,28 @@ app.get('/item-models', checkJwt, async (req, res, next) => {
       .toArray()
 
     res.json(models)
+  } catch (e) {
+    console.error(e)
+    res.sendStatus(500)
+  }
+})
+
+app.get('/items/budget', checkJwt, async (req, res, next) => {
+  const db = req.app.locals.db
+
+  try {
+    const month = req.query.month
+
+    const models = await db
+      .collection('assets_model')
+      .find({})
+      .toArray()
+    const items = await db
+      .collection('assets_item')
+      .find({})
+      .toArray()
+
+    res.json(calculateBudget(items, models, month))
   } catch (e) {
     console.error(e)
     res.sendStatus(500)

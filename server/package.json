@@ -30,7 +30,8 @@
     "rimraf": "^2.6.2"
   },
   "scripts": {
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./yarn-debug.log,./yarn-error.log,./yarn.lock --copy-files",
+    "build":
+      "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./yarn-debug.log,./yarn-error.log,./yarn.lock --copy-files",
     "start": "yarn build && node -r dotenv/config dist/index.js",
     "dev:start:script": "babel-node -- ./index.js",
     "dev:start": "nodemon --exec yarn dev:start:script"

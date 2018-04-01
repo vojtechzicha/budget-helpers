@@ -53,7 +53,11 @@ class App extends Component {
       <Router history={history}>
         <ScrollToTop>
           <div className="App">
-            <Route exact path="/budget" render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} /> : <Login auth={auth} />)} />
+            <Route
+              exact
+              path="/budget"
+              render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} fetch={this.fetch} /> : <Login auth={auth} />)}
+            />
             <Route
               exact
               path="/item/:key"

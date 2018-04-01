@@ -3,32 +3,59 @@ import moment from 'moment'
 
 import Header from '../Header'
 // import { formatCurrency } from '../../helpers'
+const formatCurrency = value =>
+  value === undefined || value === null ? 'undefined' : value.toLocaleString('cs-CZ', { style: 'currency', currency: 'CZK' })
 
-const NormalValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{value}</td>
-const TotalValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{/* <strong>{formatCurrency(value)}</strong> */}</td>
-const ExplainValueCell = ({ value }) => <td style={{ textAlign: 'right' }}>{/* <em>{formatCurrency(value)}</em> */}</td>
-const RawRow = ({ budgets, heading, selector, result }) => (
+const NormalValueCell = ({ value, onClick }) => (
+  <td style={{ textAlign: 'right' }} onClick={onClick}>
+    {formatCurrency(value)}
+  </td>
+)
+const TotalValueCell = ({ value, onClick }) => (
+  <td style={{ textAlign: 'right' }} onClick={onClick}>
+    {<strong>{formatCurrency(value)}</strong>}
+  </td>
+)
+const ExplainValueCell = ({ value, onClick }) => (
+  <td style={{ textAlign: 'right' }} onClick={onClick}>
+    {<em>{formatCurrency(value)}</em>}
+  </td>
+)
+const RawRow = ({ budgets, heading, selector, items, result }) => (
   <tr>
     {heading}
-    {budgets.map(selector).map((value, i) => <Fragment key={i}>{result(value)}</Fragment>)}
+    {budgets.map(selector).map((value, i) => <Fragment key={i}>{result(value, () => console.log(items(budgets[i])))}</Fragment>)}
   </tr>
 )
-const TotalRow = ({ budgets, heading, selector }) => (
-  <RawRow budgets={budgets} heading={<th scope="row">{heading}</th>} selector={selector} result={v => <TotalValueCell value={v} />} />
-)
-const Row = ({ budgets, heading, selector }) => (
-  <RawRow budgets={budgets} heading={<td>{heading}</td>} selector={selector} result={v => <NormalValueCell value={v} />} />
-)
-const ExplainRow = ({ budgets, heading, selector }) => (
+const TotalRow = ({ budgets, heading, selector, items }) => (
   <RawRow
     budgets={budgets}
+    items={items}
+    heading={<th scope="row">{heading}</th>}
+    selector={selector}
+    result={(v, click) => <TotalValueCell value={v} onClick={click} />}
+  />
+)
+const Row = ({ budgets, heading, selector, items }) => (
+  <RawRow
+    budgets={budgets}
+    items={items}
+    heading={<td>{heading}</td>}
+    selector={selector}
+    result={(v, click) => <NormalValueCell value={v} onClick={click} />}
+  />
+)
+const ExplainRow = ({ budgets, heading, selector, items }) => (
+  <RawRow
+    budgets={budgets}
+    items={items}
     heading={
       <td>
         <em>- {heading}</em>
       </td>
     }
     selector={selector}
-    result={v => <ExplainValueCell value={v} />}
+    result={(v, click) => <ExplainValueCell value={v} onClick={click} />}
   />
 )
 
@@ -49,12 +76,11 @@ class BudgetScreen extends Component {
   month = m => `${m.toString().substring(4, 6)}/${m.toString().substring(0, 4)}`
 
   async componentDidMount() {
+    const { fetch } = this.props
     const months = this.months(moment().date(1), 5)
 
     this.setState({
-      budgets: await Promise.all(
-        months.map(m => fetch(`${process.env.REACT_APP_SERVER_URI}assets/items/budget?month=${m}`).then(res => res.json()))
-      ),
+      budgets: await Promise.all(months.map(m => fetch('assets', `items/budget?month=${m}`).then(res => res.json()))),
       months
     })
   }
@@ -79,7 +105,7 @@ class BudgetScreen extends Component {
             </tr>
           </thead>
           <tbody>
-            <TotalRow budgets={budgets} heading="Value from Previous Month" selector={b => b.lastMonthValue} />
+            <TotalRow budgets={budgets} heading="Value from Previous Month" selector={b => b.previousValue} items={b => b.previousValues} />
           </tbody>
         </table>
         <hr />
@@ -111,7 +137,7 @@ class BudgetScreen extends Component {
         <hr />
         <table className="table table-border table-hover" style={{ tableLayout: 'fixed' }}>
           <tbody>
-            <TotalRow budgets={budgets} heading="Total Asset Value" selector={b => b.currentValue} />
+            <TotalRow budgets={budgets} heading="Total Asset Value" selector={b => b.currentValue} items={b => b.currentValues} />
             <Row budgets={budgets} heading="Total Cash Income/Expanse" selector={b => -b.investment + b.soldValue} />
           </tbody>
         </table>
