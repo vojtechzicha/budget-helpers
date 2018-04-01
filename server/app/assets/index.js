@@ -7,7 +7,7 @@ import { extname } from 'path'
 import moment from 'moment'
 
 import checkJwt from '../../checkJwt'
-import { calculateItemAbsolute } from './calculate'
+import { calculateItemAbsolute, calculateItemRelative } from './calculate'
 
 const app = Router()
 
@@ -44,7 +44,7 @@ app.get('/item/:id', checkJwt, async (req, res, next) => {
       ...item,
       calculation: {
         absolute: calculateItemAbsolute(item, model, currentMonth),
-        relative: null
+        relative: calculateItemRelative(item, model, currentMonth)
       }
     })
   } catch (e) {

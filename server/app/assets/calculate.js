@@ -157,7 +157,6 @@ export const calculateItemAbsolute = (item, model, month) => {
 
   const investmentWriteOff = accessorryWriteOff + additionalCosts
 
-  console.log(item.sell.date, last.toString())
   if (!isItemSold(item, last)) {
     const valueWriteOff = calculateValueWriteOff(item, model, first),
       writeOff = investmentWriteOff + valueWriteOff,
@@ -172,8 +171,8 @@ export const calculateItemAbsolute = (item, model, month) => {
       investmentWriteOff,
       writeOff,
       currentValue,
-      soldValue: null
-      // profit
+      soldValue: null,
+      profit: null
     }
   } else {
     console.log('here')
@@ -200,6 +199,60 @@ export const calculateItemAbsolute = (item, model, month) => {
       currentValue: 0,
       soldValue: sellAmount,
       profit: sellAmount - currentValue
+    }
+  }
+}
+
+export const calculateItemRelative = (item, model, month) => {
+  const first = moment(`${month.substring(0, 4)}-${month.substring(5, 7)}-01`, 'YYYY-MM-DD')
+  const previousMonth = first
+    .clone()
+    .add(-1, 'month')
+    .format('YYYY-MM')
+
+  console.log(month, previousMonth)
+
+  const previousCalc = calculateItemAbsolute(item, model, previousMonth),
+    thisCalc = calculateItemAbsolute(item, model, month)
+
+  if (previousCalc.soldValue !== null && thisCalc.soldValue !== null) {
+    return {
+      previousValue: 0,
+      appliedDamages: 0,
+      additionalCosts: 0,
+      accessories: 0,
+      investment: 0,
+      investmentWriteOff: 0,
+      writeOff: 0,
+      currentValue: 0,
+      soldValue: null,
+      profit: null
+    }
+  } else if (previousCalc.soldValue === null && thisCalc.soldValue !== null) {
+    return {
+      previousValue: previousCalc.currentValue,
+      appliedDamages: thisCalc.appliedDamages - previousCalc.appliedDamages,
+      additionalCosts: thisCalc.additionalCosts - previousCalc.additionalCosts,
+      accessories: thisCalc.accessories - previousCalc.accessories,
+      investment: thisCalc.investment - previousCalc.investment,
+      investmentWriteOff: thisCalc.investmentWriteOff - previousCalc.investmentWriteOff,
+      writeOff: thisCalc.writeOff - previousCalc.writeOff,
+      currentValue: thisCalc.currentValue,
+      soldValue: thisCalc.soldValue,
+      profit: thisCalc.profit
+    }
+  } else {
+    return {
+      previousValue: previousCalc.currentValue,
+      appliedDamages: thisCalc.appliedDamages - previousCalc.appliedDamages,
+      additionalCosts: thisCalc.additionalCosts - previousCalc.additionalCosts,
+      accessories: thisCalc.accessories - previousCalc.accessories,
+      investment: thisCalc.investment - previousCalc.investment,
+      investmentWriteOff: thisCalc.investmentWriteOff - previousCalc.investmentWriteOff,
+      writeOff: thisCalc.writeOff - previousCalc.writeOff,
+      currentValue: thisCalc.currentValue,
+      soldValue: null,
+      profit: null
     }
   }
 }

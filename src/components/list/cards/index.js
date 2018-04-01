@@ -9,7 +9,7 @@ import Invoice from './Invoice'
 
 import { ExpiredWarranty, ValidWarranty } from './Warranty'
 
-import { WriteOff } from './../old-cards'
+import { WriteOff, Month } from './../old-cards'
 
 export default [
   Details,
@@ -22,5 +22,6 @@ export default [
   Sell,
   Accessories,
   AdditionalCosts,
-  WriteOff
+  WriteOff,
+  Month
 ]
