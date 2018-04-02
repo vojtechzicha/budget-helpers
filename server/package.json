@@ -29,9 +29,13 @@
     "nodemon": "^1.15.1",
     "rimraf": "^2.6.2"
   },
+  "engines": {
+    "node": "^9.10.1",
+    "yarn": "^1.5.1"
+  },
   "scripts": {
     "build":
-      "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./yarn-debug.log,./yarn-error.log,./access.log --copy-files",
+      "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./yarn-debug.log,./yarn-error.log,./access.log,./package.json,./yarn.lock --copy-files",
     "start": "node dist/index.js",
     "postinstall": "yarn build",
     "dev:start:script": "babel-node -- ./index.js",
