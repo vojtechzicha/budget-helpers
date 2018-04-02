@@ -9,6 +9,10 @@ import fileUpload from 'express-fileupload'
 
 import assets from './app/assets'
 
+console.log('application started')
+
+console.log('1. Expresss Configuration')
+
 const app = express()
 
 app.use(cors())
@@ -19,12 +23,6 @@ app.use(urlencoded({ extended: true }))
 app.use(
   morgan('dev', {
     skip: (req, res) => res.statusCode < 400
-  })
-)
-
-app.use(
-  morgan('common', {
-    stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
   })
 )
 
@@ -42,6 +40,20 @@ app.use((req, res, next) => {
 
 app.use(fileUpload())
 
+console.log('1) Expresss Configuration - DONE')
+
+console.log('2. Morgan Configuration')
+
+app.use(
+  morgan('common', {
+    stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+  })
+)
+
+console.log('2) Morgan Configuration - DONE')
+
+console.log('3. MongoDB Configuration')
+
 MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
   console.log(process.env.MONGO_URI)
   if (err) {
@@ -50,7 +62,10 @@ MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
   }
   app.locals.db = conn.db(process.env.MONGO_DATABASE)
 
-  app.listen(process.env.port || 3030)
+  console.log('3) MongoDB Configuration - DONE')
+  console.log('4. Listening')
+
+  app.listen(process.env.PORT || 3030)
 })
 
 app.use('/api/assets/v1/', assets)
