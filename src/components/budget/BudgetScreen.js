@@ -88,9 +88,7 @@ class BudgetScreen extends Component {
   render() {
     const { budgets, months } = this.state
 
-    return budgets === null ? (
-      <h3>Loading</h3>
-    ) : (
+    return budgets === null ? null : (
       <div>
         <Header />
         <table className="table table-border table-hover" style={{ marginTop: '.5em', tableLayout: 'fixed' }}>

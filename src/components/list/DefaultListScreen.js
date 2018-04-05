@@ -15,7 +15,7 @@ class DefaultListScreen extends Component {
     const { id } = this.state
 
     if (id === null) {
-      return <div>Loading</div>
+      return null
     } else {
       return <Redirect to={`/item/${id}`} />
     }

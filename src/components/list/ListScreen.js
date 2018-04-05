@@ -227,7 +227,7 @@ class ListScreen extends Component {
               {form === 'create' ? (
                 <UpsertForm item={null} onSubmit={this.handleUpsertCreateSubmit} models={this.state.models} />
               ) : item === 'loading' ? (
-                <h3>Loading</h3>
+                <div class="loader" />
               ) : form === 'edit' ? (
                 <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} models={this.state.models} />
               ) : (
