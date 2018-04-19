@@ -1,8 +1,7 @@
 import React from 'react'
-import { Formik, Field } from 'formik'
+import { Formik } from 'formik'
 import Yup from 'yup'
 import moment from 'moment'
-import Select from 'react-select'
 
 const Input = ({ name, label, type = 'text', values, errors, touched, handleChange, handleBlur }) => (
   <div className="form-group">

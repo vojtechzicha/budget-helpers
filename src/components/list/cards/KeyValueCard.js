@@ -69,9 +69,9 @@ class KeyValueCard extends Component {
   }
 
   handleEdit = async (i, val) => {
-    const { itemKey, handleEdit, item } = this.props
+    const { handleEdit, item } = this.props
 
-    const newVal = await handleEdit(item, i, val)
+    await handleEdit(item, i, val)
 
     this.setState({
       editingIndex: -2
@@ -79,7 +79,7 @@ class KeyValueCard extends Component {
   }
 
   handleCreate = async () => {
-    const { itemKey, handleCreate, item } = this.props
+    const { handleCreate, item } = this.props
 
     const newVal = await handleCreate(item)
 
@@ -89,9 +89,9 @@ class KeyValueCard extends Component {
   }
 
   handleRemove = async (i, val) => {
-    const { itemKey, handleRemove, item } = this.props
+    const { handleRemove, item } = this.props
 
-    const newVal = await handleRemove(item, i)
+    await handleRemove(item, i)
   }
 
   render() {
