@@ -157,7 +157,9 @@ class ListScreen extends Component {
   }
 
   handleUpsertEditSubmit = async body => {
-    const { item: { _id } } = this.state
+    const {
+      item: { _id }
+    } = this.state
 
     return this.props
       .fetch(
@@ -227,7 +229,7 @@ class ListScreen extends Component {
               {form === 'create' ? (
                 <UpsertForm item={null} onSubmit={this.handleUpsertCreateSubmit} models={this.state.models} />
               ) : item === 'loading' ? (
-                <div class="loader" />
+                <div className="loader" />
               ) : form === 'edit' ? (
                 <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} models={this.state.models} />
               ) : (
