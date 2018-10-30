@@ -1,11 +1,11 @@
-import { Component } from 'react'
+import { useEffect } from 'react'
 
-export default class Login extends Component {
-  componentDidMount() {
-    this.props.auth.login()
-  }
+const Login = ({ auth }) => {
+  useEffect(() => {
+    auth.login()
+  }, [])
 
-  render() {
-    return null
-  }
+  return null
 }
+
+export default Login

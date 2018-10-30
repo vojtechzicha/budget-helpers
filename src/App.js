@@ -42,8 +42,8 @@ const ScrollToTop = withRouter(
   }
 )
 
-class App extends Component {
-  fetch = (component, action, options = {}, headers = {}) => {
+const App = () => {
+  const fetch = (component, action, options = {}, headers = {}) => {
     return fetch(`${process.env.REACT_APP_SERVER_URI}api/${component}/v1/${action}`, {
       ...options,
       headers: new Headers({
@@ -53,57 +53,55 @@ class App extends Component {
     })
   }
 
-  render() {
-    return (
-      <Router history={history}>
-        <ScrollToTop>
-          <Route
-            exact
-            path="/budget"
-            render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} fetch={this.fetch} /> : <Login auth={auth} />)}
-          />
-          <Route
-            exact
-            path="/item/:key"
-            render={props => (auth.isAuthenticated() ? <ListScreen {...props} fetch={this.fetch} auth={auth} /> : <Login auth={auth} />)}
-          />
-          <Route
-            exact
-            path="/"
-            render={props => (auth.isAuthenticated() ? <DefaultListScreen {...props} fetch={this.fetch} /> : <Login auth={auth} />)}
-          />
-          <Route
-            exact
-            path="/callback"
-            render={props => {
-              handleAuthentication(props)
-              return <Callback {...props} />
-            }}
-          />
-          <Route
-            exact
-            path="/onedrive/signin"
-            render={() => (
-              <RenderLocationChange
-                url={
-                  `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=a7fba33d-f054-47c3-92d3-27978004647d&scope=files.readwrite.all` +
-                  `&response_type=token&redirect_uri=${encodeURIComponent(`${process.env.REACT_APP_CALLBACK_ADDRESS}/onedrive/callback`)}`
-                }
-              />
-            )}
-          />
-          <Route
-            exact
-            path="/onedrive/callback"
-            render={props => {
-              handleOneDriveAuthentication(props)
-              return <Callback {...props} />
-            }}
-          />
-        </ScrollToTop>
-      </Router>
-    )
-  }
+  return (
+    <Router history={history}>
+      <ScrollToTop>
+        <Route
+          exact
+          path="/budget"
+          render={props => (auth.isAuthenticated() ? <BudgetScreen {...props} fetch={fetch} /> : <Login auth={auth} />)}
+        />
+        <Route
+          exact
+          path="/item/:key"
+          render={props => (auth.isAuthenticated() ? <ListScreen {...props} fetch={fetch} auth={auth} /> : <Login auth={auth} />)}
+        />
+        <Route
+          exact
+          path="/"
+          render={props => (auth.isAuthenticated() ? <DefaultListScreen {...props} fetch={fetch} /> : <Login auth={auth} />)}
+        />
+        <Route
+          exact
+          path="/callback"
+          render={props => {
+            handleAuthentication(props)
+            return <Callback {...props} />
+          }}
+        />
+        <Route
+          exact
+          path="/onedrive/signin"
+          render={() => (
+            <RenderLocationChange
+              url={
+                `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=a7fba33d-f054-47c3-92d3-27978004647d&scope=files.readwrite.all` +
+                `&response_type=token&redirect_uri=${encodeURIComponent(`${process.env.REACT_APP_CALLBACK_ADDRESS}/onedrive/callback`)}`
+              }
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/onedrive/callback"
+          render={props => {
+            handleOneDriveAuthentication(props)
+            return <Callback {...props} />
+          }}
+        />
+      </ScrollToTop>
+    </Router>
+  )
 }
 
 export default App

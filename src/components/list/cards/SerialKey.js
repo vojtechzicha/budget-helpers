@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Formik } from 'formik'
 import Yup from 'yup'
 import Octicon from 'react-octicon'
@@ -43,18 +43,14 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
   />
 )
 
-class SerialKeyCard extends Component {
-  state = {
-    editing: false,
-    hovering: false
-  }
+const SerialKeyCard = ({ item, fetch, onUpdate }) => {
+  const [editing, setEditing] = useState(false)
+  const [hovering, setHovering] = useState(false)
 
-  handleRemove = async () => {
-    const { item: { _id }, fetch, onUpdate } = this.props
-
+  const handleRemove = async () => {
     await fetch(
       'assets',
-      `item/${_id}`,
+      `item/${item._id}`,
       {
         method: 'post',
         body: JSON.stringify({
@@ -70,12 +66,10 @@ class SerialKeyCard extends Component {
     onUpdate()
   }
 
-  handleEdit = async newSerialKey => {
-    const { item: { _id }, fetch, onUpdate } = this.props
-
+  const handleEdit = async newSerialKey => {
     await fetch(
       'assets',
-      `item/${_id}`,
+      `item/${item._id}`,
       {
         method: 'post',
         body: JSON.stringify({
@@ -88,39 +82,31 @@ class SerialKeyCard extends Component {
       }
     )
 
-    this.setState({ editing: false })
+    setEditing(false)
     onUpdate()
   }
 
-  render() {
-    const { item: { serialKey } } = this.props
-    const { editing, hovering } = this.state
-
-    return (
-      <Card title="Serial Key">
-        {editing ? (
-          <EditingRow val={serialKey} onSubmit={this.handleEdit} onCancel={() => this.setState({ editing: false })} />
-        ) : (
-          <h6
-            className="card-subtitle mb-2 text-muted"
-            onMouseEnter={() => this.setState({ hovering: true })}
-            onMouseLeave={() => this.setState({ hovering: false })}>
-            {serialKey === '' ? <em>missing</em> : serialKey}{' '}
-            {hovering ? (
-              <Fragment>
-                <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => this.setState({ editing: true })}>
-                  <Octicon name="pencil" />
-                </button>
-                <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => this.handleRemove()}>
-                  <Octicon name="trashcan" />
-                </button>
-              </Fragment>
-            ) : null}
-          </h6>
-        )}
-      </Card>
-    )
-  }
+  return (
+    <Card title="Serial Key">
+      {editing ? (
+        <EditingRow val={item.serialKey} onSubmit={handleEdit} onCancel={() => setEditing(false)} />
+      ) : (
+        <h6 className="card-subtitle mb-2 text-muted" onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
+          {item.serialKey === '' ? <em>missing</em> : item.serialKey}{' '}
+          {hovering ? (
+            <Fragment>
+              <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => setEditing(false)}>
+                <Octicon name="pencil" />
+              </button>
+              <button type="button" className="btn btn-default btn-outline btn-small" onClick={handleRemove}>
+                <Octicon name="trashcan" />
+              </button>
+            </Fragment>
+          ) : null}
+        </h6>
+      )}
+    </Card>
+  )
 }
 
 const SerialKey = item => ({

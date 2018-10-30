@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import moment from 'moment'
 import Octicon from 'react-octicon'
@@ -51,30 +51,35 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
   </div>
 )
 
-class ListScreen extends Component {
-  options = {
+const ListScreen = ({ match, fetch, auth }) => {
+  const options = {
     All: 'all',
     Active: 'active',
     'Soon OOW': 'soonoow',
     'Being Sold': 'being sold'
   }
 
-  state = {
-    filterSearch: '',
-    filterSelector: 'Active',
-    filterLoading: false,
-    items: [],
-    item: 'loading',
-    redirect: null,
-    form: null,
-    models: []
-  }
+  const [filter, setFilter] = useState({
+    search: '',
+    selector: 'Active',
+    loading: false
+  })
+  const [items, setItems] = useState([])
+  const [item, setItem] = useState('')
+  const [redirect, setRedirect] = useState(null)
+  const [form, setForm] = useState(null)
+  const [models, setModels] = useState([])
 
-  componentDidUpdate() {
-    if (this.state.redirect !== null) this.setState({ redirect: null })
-  }
+  useEffect(
+    () => {
+      if (redirect !== null) {
+        setRedirect(null)
+      }
+    },
+    [redirect]
+  )
 
-  itemUrl(id, month = null) {
+  const itemUrl = (id, month = null) => {
     if (month === null) {
       month = moment().format('YYYYMM')
     }
@@ -82,172 +87,149 @@ class ListScreen extends Component {
     return `item/${id}?absolute&relative=${month}`
   }
 
-  async componentDidMount() {
-    this.updateItem(null)
-    this.updateModels()
-  }
+  useEffect(
+    async () => {
+      const id = match.params.key
 
-  async componentWillReceiveProps(newProps) {
-    if (newProps.match.params.key !== this.props.match.params.key) {
-      this.updateItem(newProps.match.params.key)
-    }
-  }
+      const [items, item] = await Promise.all([
+        fetch('assets', `items?filter=${options[filter.selector]}`).then(res => res.json()),
+        fetch('assets', itemUrl(id)).then(res => res.json())
+      ])
 
-  async updateItem(id) {
-    if (id === null) id = this.props.match.params.key
+      setItems(items)
+      setItem(item)
+      setForm('default')
+    },
+    [match.params.key]
+  )
 
-    const { filterSelector } = this.state
-    const { fetch } = this.props
+  useEffect(async () => {
+    setModels(await fetch('assets', 'item-models').then(res => res.json()))
+  }, [])
 
-    const [items, item] = await Promise.all([
-      fetch('assets', `items?filter=${this.options[filterSelector]}`).then(res => res.json()),
-      fetch('assets', this.itemUrl(id)).then(res => res.json())
-    ])
-    this.setState({
-      items,
-      item,
-      form: 'default'
-    })
-  }
-
-  async updateModels() {
-    const models = await this.props.fetch('assets', 'item-models').then(res => res.json())
-    this.setState({ models })
-  }
-
-  handleRemove = async () => {
-    await this.props.fetch('assets', `item/${this.state.item._id}`, {
+  const handleRemove = async () => {
+    await fetch('assets', `item/${item._id}`, {
       method: 'delete'
     })
-    this.setState({ redirect: '/' })
+    setRedirect('/')
   }
 
-  handleFilterChange = async ({ filter, selector }) => {
-    if (selector !== this.state.filterSelector) {
-      this.setState({ filterLoading: true })
-      const items = await fetch(`${process.env.REACT_APP_SERVER_URI}assets/items?filter=${this.options[selector]}`).then(res => res.json())
-      if (items.map(i => i._id).includes(this.state.item._id)) {
-        this.setState({ filterSearch: '', filterSelector: selector, filterLoading: false, items })
+  const handleFilterChange = async ({ newFilter, selector }) => {
+    if (selector !== filter.elector) {
+      setFilter(filter => ({ ...filter, loading: true }))
+      const newItems = await fetch(`${process.env.REACT_APP_SERVER_URI}assets/items?filter=${options[selector]}`).then(res => res.json())
+
+      if (newItems.map(i => i._id).includes(item._id)) {
+        setFilter({ search: '', selector, loading: false })
+        setItems(newItems)
       } else {
-        this.setState({ filterSearch: '', filterSelector: selector, filterLoading: false, items, redirect: '/' })
+        setFilter({ search: '', selector, loading: false })
+        setItems(newItems)
+        setRedirect('/')
       }
     } else {
-      this.setState({ filterSearch: filter, filterSelector: selector })
+      setFilter(filter => ({ ...filter, search: newFilter, selector }))
     }
   }
 
-  handleUpsertCreateSubmit = async body => {
-    return this.props
-      .fetch(
-        'assets',
-        'item',
-        {
-          method: 'put',
-          body: JSON.stringify(body)
-        },
-        {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      )
+  const handleUpsertCreateSubmit = async body =>
+    fetch(
+      'assets',
+      'item',
+      {
+        method: 'put',
+        body: JSON.stringify(body)
+      },
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    )
       .then(res => res.json())
       .then(res => {
-        this.setState({ redirect: `/item/${res.id}` })
+        setRedirect(`/item/${res.id}`)
       })
-  }
 
-  handleUpsertEditSubmit = async body => {
-    const {
-      item: { _id }
-    } = this.state
+  const handleUpsertEditSubmit = async body =>
+    fetch(
+      'assets',
+      `item/${item._id}`,
+      {
+        method: 'post',
+        body: JSON.stringify(body)
+      },
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    ).then(res => {
+      setRedirect(`/item/${res.id}`)
+    })
 
-    return this.props
-      .fetch(
-        'assets',
-        `item/${_id}`,
-        {
-          method: 'post',
-          body: JSON.stringify(body)
-        },
-        {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      )
-      .then(res => {
-        this.updateItem(_id)
-      })
-  }
-
-  render() {
-    const { match } = this.props
-    const { filterSearch, filterSelector, filterLoading, items, item, redirect, form } = this.state
-
-    return redirect !== null ? (
-      <Redirect to={redirect} />
-    ) : (
-      <Fragment>
-        <Header match={match} />
-        <div className="container-fluid" style={{ marginTop: '1em' }}>
-          <div className="row">
-            <div className="col-sm-3">
-              <ul className="list-group">
-                <li className="list-group-item">
-                  {filterLoading ? (
-                    'Loading...'
-                  ) : (
-                    <Filter
-                      filter={filterSearch}
-                      onChange={this.handleFilterChange}
-                      current={filterSelector}
-                      options={Object.keys(this.options)}
-                      isCreate={form === 'create'}
-                      onCreate={() => this.setState({ form: 'create' })}
-                      onBack={() => this.setState({ form: 'default' })}
-                    />
-                  )}
-                </li>
-                {items
-                  .filter(i => i.title.toLowerCase().includes(filterSearch.toLowerCase()))
-                  .sort((a, b) => (a.title < b.title ? -1 : 1))
-                  .map(i => (
-                    <li key={i._id} className="list-group-item">
-                      {i._id === item._id ? (
-                        <span className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
-                          <strong>{item.title}</strong>
-                        </span>
-                      ) : (
-                        <Link to={`/item/${i._id}`} className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
-                          {i.title}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            <div className="col-sm-9">
-              {form === 'create' ? (
-                <UpsertForm item={null} onSubmit={this.handleUpsertCreateSubmit} models={this.state.models} />
-              ) : item === 'loading' ? (
-                <div className="loader" />
-              ) : form === 'edit' ? (
-                <UpsertForm item={item} onSubmit={this.handleUpsertEditSubmit} models={this.state.models} />
-              ) : (
-                <DeviceList
-                  item={item}
-                  onRemove={this.handleRemove}
-                  onEdit={() => this.setState({ form: 'edit' })}
-                  fetch={this.props.fetch}
-                  onUpdate={() => this.updateItem(null)}
-                  auth={this.props.auth}
-                />
-              )}
-            </div>
+  return redirect !== null ? (
+    <Redirect to={redirect} />
+  ) : (
+    <Fragment>
+      <Header match={match} />
+      <div className="container-fluid" style={{ marginTop: '1em' }}>
+        <div className="row">
+          <div className="col-sm-3">
+            <ul className="list-group">
+              <li className="list-group-item">
+                {filter.loading ? (
+                  'Loading...'
+                ) : (
+                  <Filter
+                    filter={filter.search}
+                    onChange={handleFilterChange}
+                    current={filter.selector}
+                    options={Object.keys(options)}
+                    isCreate={form === 'create'}
+                    onCreate={() => setForm('create')}
+                    onBack={() => setForm('default')}
+                  />
+                )}
+              </li>
+              {items
+                .filter(i => i.title.toLowerCase().includes(filter.search.toLowerCase()))
+                .sort((a, b) => (a.title < b.title ? -1 : 1))
+                .map(i => (
+                  <li key={i._id} className="list-group-item">
+                    {i._id === item._id ? (
+                      <span className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
+                        <strong>{item.title}</strong>
+                      </span>
+                    ) : (
+                      <Link to={`/item/${i._id}`} className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
+                        {i.title}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+            </ul>
+          </div>
+          <div className="col-sm-9">
+            {form === 'create' ? (
+              <UpsertForm item={null} onSubmit={handleUpsertCreateSubmit} models={models} />
+            ) : item === 'loading' ? (
+              <div className="loader" />
+            ) : form === 'edit' ? (
+              <UpsertForm item={item} onSubmit={handleUpsertEditSubmit} models={models} />
+            ) : (
+              <DeviceList
+                item={item}
+                onRemove={handleRemove}
+                onEdit={() => setForm('edit')}
+                fetch={fetch}
+                onUpdate={() => setRedirect('/')}
+                auth={auth}
+              />
+            )}
           </div>
         </div>
-      </Fragment>
-    )
-  }
+      </div>
+    </Fragment>
+  )
 }
 
 export default ListScreen
