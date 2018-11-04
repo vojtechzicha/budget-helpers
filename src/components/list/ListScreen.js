@@ -65,7 +65,7 @@ const ListScreen = ({ match, fetch, auth }) => {
     loading: false
   })
   const [items, setItems] = useState([])
-  const [item, setItem] = useState('')
+  const [item, setItem] = useState('loading')
   const [redirect, setRedirect] = useState(null)
   const [form, setForm] = useState(null)
   const [models, setModels] = useState([])
@@ -97,6 +97,7 @@ const ListScreen = ({ match, fetch, auth }) => {
       ])
 
       setItems(items)
+      console.log('setItem', item)
       setItem(item)
       setForm('default')
     },

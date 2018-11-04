@@ -44,7 +44,7 @@ const ScrollToTop = withRouter(
 
 const App = () => {
   const fetch = (component, action, options = {}, headers = {}) => {
-    return fetch(`${process.env.REACT_APP_SERVER_URI}api/${component}/v1/${action}`, {
+    return window.fetch(`${process.env.REACT_APP_SERVER_URI}api/${component}/v1/${action}`, {
       ...options,
       headers: new Headers({
         ...headers,
