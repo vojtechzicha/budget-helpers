@@ -145,7 +145,6 @@ class DocumentsCard extends Component {
       item: { _id }
     } = this.props
     const { fetch, auth } = this.context
-    console.log(this.context)
 
     if (this.state.links[docId] !== undefined) return
 
