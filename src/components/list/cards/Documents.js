@@ -1,10 +1,11 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Octicon from 'react-octicon'
 import { Formik } from 'formik'
 import Yup from 'yup'
 
 import Card from './Card'
+import context from '../../../context'
 
 const EditingRow = ({ doc, onSubmit, onCancel }) => (
   <Formik
@@ -55,7 +56,11 @@ class DocumentsCard extends Component {
   uploadInput = null
 
   handleUpload = async e => {
-    const { fetch, item: { _id }, onUpdate, auth } = this.props
+    const {
+      item: { _id },
+      onUpdate
+    } = this.props
+    const { fetch, auth } = useContext(context)
 
     e.preventDefault()
 
@@ -80,7 +85,11 @@ class DocumentsCard extends Component {
   }
 
   handleRemove = async docId => {
-    const { fetch, item: { _id, documents }, onUpdate } = this.props
+    const {
+      item: { _id, documents },
+      onUpdate
+    } = this.props
+    const { fetch } = this.context
 
     const newDocuments = [...documents.filter(doc => doc.id !== docId)]
 
@@ -103,7 +112,11 @@ class DocumentsCard extends Component {
   }
 
   handleEdit = async (docId, newKey) => {
-    const { fetch, item: { _id, documents }, onUpdate } = this.props
+    const {
+      item: { _id, documents },
+      onUpdate
+    } = this.props
+    const { fetch } = this.context
 
     const oldDocument = documents.find(doc => doc.id === docId)
     const newDocuments = [...documents.filter(doc => doc.id !== docId), { ...oldDocument, key: newKey }]
@@ -128,7 +141,11 @@ class DocumentsCard extends Component {
   }
 
   handleLoadDocLink = async docId => {
-    const { fetch, item: { _id }, auth } = this.props
+    const {
+      item: { _id }
+    } = this.props
+    const { fetch, auth } = this.context
+    console.log(this.context)
 
     if (this.state.links[docId] !== undefined) return
 
@@ -145,8 +162,11 @@ class DocumentsCard extends Component {
   }
 
   render() {
-    const { auth, item: { documents } } = this.props
+    const {
+      item: { documents }
+    } = this.props
     const { adding, hover, editing, links } = this.state
+    const { auth } = this.context
 
     return !auth.isOneDriveAuthenticated() ? (
       <Card title="Documents" subtitle="OneDrive signed out">
@@ -192,6 +212,7 @@ class DocumentsCard extends Component {
                     <a
                       href={links[doc.id] !== undefined ? links[doc.id] : '/'}
                       target="_blank"
+                      rel="noopener noreferrer"
                       title={doc.filename}
                       onClick={e => {
                         if (links[doc.id] === undefined) {
@@ -228,10 +249,12 @@ class DocumentsCard extends Component {
   }
 }
 
+DocumentsCard.contextType = context
+
 const Documents = item => ({
   key: 'documents',
   rows: item.documents === undefined || item.documents === null || item.documents.length < 1 ? 1 : item.documents.length,
-  card: (fetch, onUpdate, auth) => <DocumentsCard item={item} fetch={fetch} onUpdate={onUpdate} auth={auth} />
+  card: (fetch, onUpdate, auth) => <DocumentsCard item={item} onUpdate={onUpdate} />
 })
 
 export default Documents

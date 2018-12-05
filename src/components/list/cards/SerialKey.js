@@ -134,7 +134,7 @@ const SerialKey = item => ({
       )
     }
   },
-  card: (fetch, onUpdate) => <SerialKeyCard item={item} fetch={fetch} onUpdate={onUpdate} />
+  card: (fetch, onUpdate) => <SerialKeyCard item={item} onUpdate={onUpdate} />
 })
 
 export default SerialKey

@@ -6,7 +6,11 @@ import Octicon from 'react-octicon'
 
 import Card from './Card'
 
-const SoldCard = ({ item: { sell: { date, accountingCurrencyAmount, originalCurrency, originalCurrencyAmount } } }) => (
+const SoldCard = ({
+  item: {
+    sell: { date, accountingCurrencyAmount, originalCurrency, originalCurrencyAmount }
+  }
+}) => (
   <Card title="Sold">
     <p className="card-text">
       <strong>Date</strong>: {moment(date).format('MMMM Do, YYYY')}
@@ -136,8 +140,7 @@ const Sell = item => ({
     }
   },
   rows: (item.sell !== undefined && item.sell !== null) || item.inSell === true ? 3 : 0,
-  card: (fetch, onUpdate) =>
-    item.inSell === true ? <InSellCard item={item} fetch={fetch} onUpdate={onUpdate} /> : <SoldCard item={item} />
+  card: (fetch, onUpdate) => (item.inSell === true ? <InSellCard item={item} onUpdate={onUpdate} /> : <SoldCard item={item} />)
 })
 
 export default Sell

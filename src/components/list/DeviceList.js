@@ -1,9 +1,11 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useContext } from 'react'
 import Octicon from 'react-octicon'
+import context from '../../context'
 
-const DeviceList = ({ item, onRemove, onEdit, fetch, onUpdate, auth }) => {
+const DeviceList = ({ item, onRemove, onEdit, onUpdate }) => {
   const allCards = require('./cards/index')
   const [showControls] = useState(true)
+  const { fetch, auth } = useContext(context)
 
   const cards = allCards.default.map(card => card(item))
   const activeCards = cards.filter(card => card.rows > 0)

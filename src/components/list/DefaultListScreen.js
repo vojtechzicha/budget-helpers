@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Redirect } from 'react-router-dom'
+import context from '../../context'
 
-const DefaultListScreen = ({ fetch }) => {
+const DefaultListScreen = () => {
   const [id, setId] = useState(null)
+  const { fetch } = useContext(context)
 
   useEffect(async () => {
     const item = await fetch('assets', 'item').then(res => res.json())

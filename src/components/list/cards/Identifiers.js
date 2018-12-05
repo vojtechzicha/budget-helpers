@@ -32,7 +32,6 @@ const Identifiers = item => ({
       item={item}
       itemKey="ids"
       label="Identifiers"
-      fetch={fetch}
       handleRemove={async (item, i) => {
         const { _id, ids } = item
 

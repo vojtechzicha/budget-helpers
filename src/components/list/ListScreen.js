@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import moment from 'moment'
 import Octicon from 'react-octicon'
@@ -6,6 +6,7 @@ import Octicon from 'react-octicon'
 import Header from './../Header'
 import DeviceList from './DeviceList'
 import UpsertForm from './UpsertForm'
+import context from '../../context'
 
 const Filter = ({ onChange, filter, options = [], current = null, isCreate = false, onCreate = null, onBack = null }) => (
   <div className="input-group mb-3">
@@ -23,8 +24,9 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
           {current}
         </button>
         <div className="dropdown-menu">
-          {options.filter(option => option !== current).map(
-            (option, index) =>
+          {options
+            .filter(option => option !== current)
+            .map((option, index) =>
               option === '-' ? (
                 <div key={index} role="separator" className="dropdown-divider" />
               ) : (
@@ -32,26 +34,24 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
                   {option}
                 </button>
               )
-          )}
+            )}
         </div>
-        {!isCreate &&
-          onCreate && (
-            <button className="btn btn-secondary" type="button" onClick={onCreate}>
-              <Octicon name="plus" />
-            </button>
-          )}
-        {isCreate &&
-          onBack && (
-            <button className="btn btn-secondary" type="button" onClick={onBack}>
-              <Octicon name="arrow-left" />
-            </button>
-          )}
+        {!isCreate && onCreate && (
+          <button className="btn btn-secondary" type="button" onClick={onCreate}>
+            <Octicon name="plus" />
+          </button>
+        )}
+        {isCreate && onBack && (
+          <button className="btn btn-secondary" type="button" onClick={onBack}>
+            <Octicon name="arrow-left" />
+          </button>
+        )}
       </div>
     )}
   </div>
 )
 
-const ListScreen = ({ match, fetch, auth }) => {
+const ListScreen = ({ match }) => {
   const options = {
     All: 'all',
     Active: 'active',
@@ -69,6 +69,7 @@ const ListScreen = ({ match, fetch, auth }) => {
   const [redirect, setRedirect] = useState(null)
   const [form, setForm] = useState(null)
   const [models, setModels] = useState([])
+  const { fetch, auth } = useContext(context)
 
   useEffect(
     () => {
@@ -97,7 +98,6 @@ const ListScreen = ({ match, fetch, auth }) => {
       ])
 
       setItems(items)
-      console.log('setItem', item)
       setItem(item)
       setForm('default')
     },
@@ -221,7 +221,6 @@ const ListScreen = ({ match, fetch, auth }) => {
                 item={item}
                 onRemove={handleRemove}
                 onEdit={() => setForm('edit')}
-                fetch={fetch}
                 onUpdate={() => setRedirect('/')}
                 auth={auth}
               />

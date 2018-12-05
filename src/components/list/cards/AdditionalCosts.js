@@ -43,7 +43,6 @@ const AdditionalCosts = item => ({
       item={item}
       itemKey="additionalCosts"
       label="Additional Costs"
-      fetch={fetch}
       handleRemove={async (item, id) => {
         const { _id, additionalCosts } = item
 

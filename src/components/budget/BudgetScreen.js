@@ -1,8 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react'
+import React, { Fragment, useState, useEffect, useContext } from 'react'
 import moment from 'moment'
 
 import Header from '../Header'
-// import { formatCurrency } from '../../helpers'
+import context from '../../context'
+
 const formatCurrency = value =>
   value === undefined || value === null ? 'undefined' : value.toLocaleString('cs-CZ', { style: 'currency', currency: 'CZK' })
 
@@ -61,18 +62,21 @@ const ExplainRow = ({ budgets, heading, selector, items }) => (
   />
 )
 
-const BudgetScreen = ({ fetch }) => {
+const BudgetScreen = () => {
   const getMonths = (from, count) =>
-    [...Array(count).keys()].map(i => i - count + 1).map(i =>
-      from
-        .clone()
-        .add(i, 'months')
-        .format('YYYYMM')
-    )
+    [...Array(count).keys()]
+      .map(i => i - count + 1)
+      .map(i =>
+        from
+          .clone()
+          .add(i, 'months')
+          .format('YYYYMM')
+      )
   const toMonth = m => `${m.toString().substring(4, 6)}/${m.toString().substring(0, 4)}`
 
   const [budgets, setBudgets] = useState(null)
   const [months] = useState(getMonths(moment().date(1), 5))
+  const { fetch } = useContext(context)
 
   useEffect(
     async () => {
