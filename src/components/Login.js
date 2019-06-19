@@ -1,6 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useContext } from 'react'
 
-const Login = ({ auth }) => {
+import context from '../context'
+
+const Login = () => {
+  const { auth } = useContext(context)
+
   useEffect(() => {
     auth.login()
   }, [])
