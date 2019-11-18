@@ -78,12 +78,11 @@ const BudgetScreen = () => {
   const [months] = useState(getMonths(moment().date(1), 5))
   const { fetch } = useContext(context)
 
-  useEffect(
-    async () => {
+  useEffect(() => {
+    ;(async () => {
       setBudgets(await Promise.all(months.map(m => fetch('assets', `items/budget?month=${m}`).then(res => res.json()))))
-    },
-    [months]
-  )
+    })()
+  }, [fetch, months])
 
   return budgets === null ? null : (
     <div>

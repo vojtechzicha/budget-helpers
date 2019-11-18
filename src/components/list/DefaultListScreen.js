@@ -6,10 +6,12 @@ const DefaultListScreen = () => {
   const [id, setId] = useState(null)
   const { fetch } = useContext(context)
 
-  useEffect(async () => {
-    const item = await fetch('assets', 'item').then(res => res.json())
-    setId(item._id)
-  }, [])
+  useEffect(() => {
+    ;(async () => {
+      const item = await fetch('assets', 'item').then(res => res.json())
+      setId(item._id)
+    })()
+  }, [fetch])
 
   if (id === null) {
     return null

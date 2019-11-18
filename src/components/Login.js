@@ -7,7 +7,7 @@ const Login = () => {
 
   useEffect(() => {
     auth.login()
-  }, [])
+  }, [auth])
 
   return null
 }

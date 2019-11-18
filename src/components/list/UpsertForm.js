@@ -1,6 +1,6 @@
 import React from 'react'
 import { Formik } from 'formik'
-import Yup from 'yup'
+import * as Yup from 'yup'
 import moment from 'moment'
 
 const Input = ({ name, label, type = 'text', values, errors, touched, handleChange, handleBlur }) => (
@@ -16,13 +16,12 @@ const Input = ({ name, label, type = 'text', values, errors, touched, handleChan
       onBlur={handleBlur}
       value={values[name]}
     />
-    {touched[name] &&
-      errors[name] && (
-        <small className="form-text" style={{ color: 'red' }}>
-          {' '}
-          {errors[name]}{' '}
-        </small>
-      )}
+    {touched[name] && errors[name] && (
+      <small className="form-text" style={{ color: 'red' }}>
+        {' '}
+        {errors[name]}{' '}
+      </small>
+    )}
   </div>
 )
 
@@ -41,13 +40,12 @@ const SelectInput = ({ name, label, values, errors, touched, handleChange, handl
         </option>
       ))}
     </select>
-    {touched[name] &&
-      errors[name] && (
-        <small className="form-text" style={{ color: 'red' }}>
-          {' '}
-          {errors[name]}{' '}
-        </small>
-      )}
+    {touched[name] && errors[name] && (
+      <small className="form-text" style={{ color: 'red' }}>
+        {' '}
+        {errors[name]}{' '}
+      </small>
+    )}
   </div>
 )
 

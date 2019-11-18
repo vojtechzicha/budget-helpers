@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { Formik } from 'formik'
-import Yup from 'yup'
+import * as Yup from 'yup'
 import Octicon from 'react-octicon'
 
 import Card from './Card'

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react'
 import { Formik } from 'formik'
-import Yup from 'yup'
+import * as Yup from 'yup'
 import Octicon from 'react-octicon'
 
 import Card from './Card'

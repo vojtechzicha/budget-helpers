@@ -71,14 +71,11 @@ const ListScreen = ({ match }) => {
   const [models, setModels] = useState([])
   const { fetch, auth } = useContext(context)
 
-  useEffect(
-    () => {
-      if (redirect !== null) {
-        setRedirect(null)
-      }
-    },
-    [redirect]
-  )
+  useEffect(() => {
+    if (redirect !== null) {
+      setRedirect(null)
+    }
+  }, [redirect])
 
   const itemUrl = (id, month = null) => {
     if (month === null) {
@@ -88,8 +85,8 @@ const ListScreen = ({ match }) => {
     return `item/${id}?absolute&relative=${month}`
   }
 
-  useEffect(
-    async () => {
+  useEffect(() => {
+    ;(async () => {
       const id = match.params.key
 
       const [items, item] = await Promise.all([
@@ -100,13 +97,14 @@ const ListScreen = ({ match }) => {
       setItems(items)
       setItem(item)
       setForm('default')
-    },
-    [match.params.key]
-  )
+    })()
+  }, [fetch, filter.selector, match.params.key, options])
 
-  useEffect(async () => {
-    setModels(await fetch('assets', 'item-models').then(res => res.json()))
-  }, [])
+  useEffect(() => {
+    ;(async () => {
+      setModels(await fetch('assets', 'item-models').then(res => res.json()))
+    })()
+  }, [fetch])
 
   const handleRemove = async () => {
     await fetch('assets', `item/${item._id}`, {

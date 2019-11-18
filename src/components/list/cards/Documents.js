@@ -2,7 +2,7 @@ import React, { Component, Fragment, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import Octicon from 'react-octicon'
 import { Formik } from 'formik'
-import Yup from 'yup'
+import * as Yup from 'yup'
 
 import Card from './Card'
 import context from '../../../context'
