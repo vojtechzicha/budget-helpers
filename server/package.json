@@ -31,8 +31,8 @@
     "rimraf": "^2.6.2"
   },
   "engines": {
-    "node": "^13.1.0",
-    "yarn": "^1.5.1"
+    "node": "^13.1",
+    "yarn": "^1.5"
   },
   "scripts": {
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./yarn-debug.log,./yarn-error.log,./access.log,./package.json,./yarn.lock --copy-files",
