@@ -140,7 +140,8 @@ const Sell = item => ({
     }
   },
   rows: (item.sell !== undefined && item.sell !== null) || item.inSell === true ? 3 : 0,
-  card: (fetch, onUpdate) => (item.inSell === true ? <InSellCard item={item} onUpdate={onUpdate} /> : <SoldCard item={item} />)
+  card: (fetch, onUpdate) =>
+    item.inSell === true ? <InSellCard item={item} onUpdate={onUpdate} fetch={fetch} /> : <SoldCard item={item} />
 })
 
 export default Sell
