@@ -98,7 +98,7 @@ const ListScreen = ({ match }) => {
       setItem(item)
       setForm('default')
     })()
-  }, [fetch, filter.selector, match.params.key, options])
+  }, [fetch, filter.selector, match.params.key])
 
   useEffect(() => {
     ;(async () => {
