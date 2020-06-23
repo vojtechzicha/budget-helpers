@@ -72,7 +72,7 @@ const ListScreen = ({ match }) => {
   const { fetch, auth } = useContext(context)
 
   useEffect(() => {
-    if (redirect !== null) {
+     if (redirect !== null) {
       setRedirect(null)
     }
   }, [redirect])
@@ -98,7 +98,7 @@ const ListScreen = ({ match }) => {
       setItem(item)
       setForm('default')
     })()
-  }, [fetch, filter.selector, match.params.key, options])
+  }, [/*fetch, */filter.selector, match.params.key])
 
   useEffect(() => {
     ;(async () => {
@@ -114,7 +114,7 @@ const ListScreen = ({ match }) => {
   }
 
   const handleFilterChange = async ({ newFilter, selector }) => {
-    if (selector !== filter.elector) {
+     if (selector !== filter.selector) {
       setFilter(filter => ({ ...filter, loading: true }))
       const newItems = await fetch(`${process.env.REACT_APP_SERVER_URI}assets/items?filter=${options[selector]}`).then(res => res.json())
 
