@@ -51,14 +51,14 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
   </div>
 )
 
-const ListScreen = ({ match }) => {
-  const options = {
-    All: 'all',
-    Active: 'active',
-    'Soon OOW': 'soonoow',
-    'Being Sold': 'being sold'
-  }
+const options = {
+  All: 'all',
+  Active: 'active',
+  'Soon OOW': 'soonoow',
+  'Being Sold': 'being sold'
+}
 
+const ListScreen = ({ match }) => {
   const [filter, setFilter] = useState({
     search: '',
     selector: 'Active',
@@ -98,7 +98,7 @@ const ListScreen = ({ match }) => {
       setItem(item)
       setForm('default')
     })()
-  }, [/*fetch, */filter.selector, match.params.key])
+  }, [fetch, filter.selector, match.params.key, options])
 
   useEffect(() => {
     ;(async () => {
