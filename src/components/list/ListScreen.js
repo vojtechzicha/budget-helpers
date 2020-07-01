@@ -16,7 +16,7 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
       placeholder="filter"
       aria-label="filter"
       aria-describedby="basic-addon1"
-      onChange={e => onChange({ filter: e.currentTarget.value, selector: current })}
+      onChange={(e) => onChange({ filter: e.currentTarget.value, selector: current })}
     />
     {options.length > 0 && (
       <div className="input-group-append">
@@ -25,7 +25,7 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
         </button>
         <div className="dropdown-menu">
           {options
-            .filter(option => option !== current)
+            .filter((option) => option !== current)
             .map((option, index) =>
               option === '-' ? (
                 <div key={index} role="separator" className="dropdown-divider" />
@@ -54,8 +54,7 @@ const Filter = ({ onChange, filter, options = [], current = null, isCreate = fal
 const options = {
   All: 'all',
   Active: 'active',
-  'Soon OOW': 'soonoow',
-  'Being Sold': 'being sold'
+  'Being Sold': 'being-sold'
 }
 
 const ListScreen = ({ match }) => {
@@ -72,7 +71,7 @@ const ListScreen = ({ match }) => {
   const { fetch, auth } = useContext(context)
 
   useEffect(() => {
-     if (redirect !== null) {
+    if (redirect !== null) {
       setRedirect(null)
     }
   }, [redirect])
@@ -90,8 +89,8 @@ const ListScreen = ({ match }) => {
       const id = match.params.key
 
       const [items, item] = await Promise.all([
-        fetch('assets', `items?filter=${options[filter.selector]}`).then(res => res.json()),
-        fetch('assets', itemUrl(id)).then(res => res.json())
+        fetch('assets', `items?filter=${options[filter.selector]}`).then((res) => res.json()),
+        fetch('assets', itemUrl(id)).then((res) => res.json())
       ])
 
       setItems(items)
@@ -102,7 +101,7 @@ const ListScreen = ({ match }) => {
 
   useEffect(() => {
     ;(async () => {
-      setModels(await fetch('assets', 'item-models').then(res => res.json()))
+      setModels(await fetch('assets', 'item-models').then((res) => res.json()))
     })()
   }, [fetch])
 
@@ -114,11 +113,11 @@ const ListScreen = ({ match }) => {
   }
 
   const handleFilterChange = async ({ newFilter, selector }) => {
-     if (selector !== filter.selector) {
-      setFilter(filter => ({ ...filter, loading: true }))
-      const newItems = await fetch('assets', `items?filter=${options[selector]}`).then(res => res.json())
+    if (selector !== filter.selector) {
+      setFilter((filter) => ({ ...filter, loading: true }))
+      const newItems = await fetch('assets', `items?filter=${options[selector]}`).then((res) => res.json())
 
-      if (newItems.map(i => i._id).includes(item._id)) {
+      if (newItems.map((i) => i._id).includes(item._id)) {
         setFilter({ search: '', selector, loading: false })
         setItems(newItems)
       } else {
@@ -127,11 +126,11 @@ const ListScreen = ({ match }) => {
         setRedirect('/')
       }
     } else {
-      setFilter(filter => ({ ...filter, search: newFilter, selector }))
+      setFilter((filter) => ({ ...filter, search: newFilter, selector }))
     }
   }
 
-  const handleUpsertCreateSubmit = async body =>
+  const handleUpsertCreateSubmit = async (body) =>
     fetch(
       'assets',
       'item',
@@ -144,12 +143,12 @@ const ListScreen = ({ match }) => {
         'Content-Type': 'application/json'
       }
     )
-      .then(res => res.json())
-      .then(res => {
+      .then((res) => res.json())
+      .then((res) => {
         setRedirect(`/item/${res.id}`)
       })
 
-  const handleUpsertEditSubmit = async body =>
+  const handleUpsertEditSubmit = async (body) =>
     fetch(
       'assets',
       `item/${item._id}`,
@@ -161,7 +160,7 @@ const ListScreen = ({ match }) => {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    ).then(res => {
+    ).then((res) => {
       setRedirect(`/item/${res.id}`)
     })
 
@@ -189,27 +188,27 @@ const ListScreen = ({ match }) => {
                   />
                 )}
               </li>
-              <div className="overflow-auto" style={{height: 'calc(100vh - 180px)'}}>
-              {items
-                .filter(i => i.title.toLowerCase().includes(filter.search.toLowerCase()))
-                .sort((a, b) => (a.title < b.title ? -1 : 1))
-                .map(i => (
-                  <li key={i._id} className="list-group-item">
-                    {i._id === item._id ? (
-                      <span className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
-                        <strong>{item.title}</strong>
-                      </span>
-                    ) : (
-                      <Link to={`/item/${i._id}`} className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
-                        {i.title}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-                </div>
+              <div className="overflow-auto" style={{ height: 'calc(100vh - 180px)' }}>
+                {items
+                  .filter((i) => i.title.toLowerCase().includes(filter.search.toLowerCase()))
+                  .sort((a, b) => (a.title < b.title ? -1 : 1))
+                  .map((i) => (
+                    <li key={i._id} className="list-group-item">
+                      {i._id === item._id ? (
+                        <span className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
+                          <strong>{item.title}</strong>
+                        </span>
+                      ) : (
+                        <Link to={`/item/${i._id}`} className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
+                          {i.title}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+              </div>
             </ul>
           </div>
-          <div className="col-sm-9 overflow-auto" style={{height: 'calc(100vh - 180px)'}}>
+          <div className="col-sm-9 overflow-auto" style={{ height: 'calc(100vh - 180px)' }}>
             {form === 'create' ? (
               <UpsertForm item={null} onSubmit={handleUpsertCreateSubmit} models={models} />
             ) : item === 'loading' ? (

@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { ObjectID } from 'mongodb'
 import { createReadStream } from 'streamifier'
 import oneDriveApi from 'onedrive-api'
-import { v4 as uuid} from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { extname } from 'path'
 import moment from 'moment'
 
@@ -11,21 +11,33 @@ import { calculateItemAbsolute, calculateItemRelative, calculateBudget } from '.
 
 const app = Router()
 
-const prepareItem = item => ({
+const prepareItem = (item) => ({
   ...item,
   ...(item.model !== undefined && item.model !== null ? { model: ObjectID(item.model.valueOf()) } : {})
 })
 
 app.get('/items', checkJwt, async (req, res, next) => {
   try {
-    const db = req.app.locals.db
+    const db = req.app.locals.db,
+      filter =
+        req.query.filter === 'being-sold'
+          ? {
+              insell: true
+            }
+          : req.query.filter === 'all'
+          ? {}
+          : req.query.filter === 'active'
+          ? {
+              sell: { $exists: false }
+            }
+          : null
 
-    res.json(
-      await db
-        .collection('assets_item')
-        .find({})
-        .toArray()
-    )
+    if (filter !== null) {
+      res.json(await db.collection('assets_item').find(filter).toArray())
+      return
+    }
+
+    res.status(403).json({ message: 'invalid filter value' })
   } catch (e) {
     next(e)
   }
@@ -148,7 +160,7 @@ app.get('/item/:id/document/:docId', checkJwt, async (req, res, next) => {
 
   try {
     const item = await db.collection('assets_item').findOne({ _id: ObjectID(req.params.id) }, { documents: 1, _id: 0 })
-    const doc = item.documents.find(doc => doc.id === req.params.docId)
+    const doc = item.documents.find((doc) => doc.id === req.params.docId)
 
     const apiRes = await oneDriveApi.items.getMetadata({
       accessToken: req.headers['x-onedrive-token'],
@@ -166,12 +178,7 @@ app.get('/item-models', checkJwt, async (req, res, next) => {
   const db = req.app.locals.db
 
   try {
-    const models = await db
-      .collection('assets_model')
-      .find({})
-      .project({ label: 1, _id: 1 })
-      .sort({ label: 1 })
-      .toArray()
+    const models = await db.collection('assets_model').find({}).project({ label: 1, _id: 1 }).sort({ label: 1 }).toArray()
 
     res.json(models)
   } catch (e) {
@@ -186,14 +193,8 @@ app.get('/items/budget', checkJwt, async (req, res, next) => {
   try {
     const month = req.query.month
 
-    const models = await db
-      .collection('assets_model')
-      .find({})
-      .toArray()
-    const items = await db
-      .collection('assets_item')
-      .find({})
-      .toArray()
+    const models = await db.collection('assets_model').find({}).toArray()
+    const items = await db.collection('assets_item').find({}).toArray()
 
     res.json(calculateBudget(items, models, month))
   } catch (e) {
