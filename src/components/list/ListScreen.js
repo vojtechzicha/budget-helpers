@@ -116,7 +116,7 @@ const ListScreen = ({ match }) => {
   const handleFilterChange = async ({ newFilter, selector }) => {
      if (selector !== filter.selector) {
       setFilter(filter => ({ ...filter, loading: true }))
-      const newItems = await fetch(`${process.env.REACT_APP_SERVER_URI}assets/items?filter=${options[selector]}`).then(res => res.json())
+      const newItems = await fetch('assets', `items?filter=${options[selector]}`).then(res => res.json())
 
       if (newItems.map(i => i._id).includes(item._id)) {
         setFilter({ search: '', selector, loading: false })
@@ -189,6 +189,7 @@ const ListScreen = ({ match }) => {
                   />
                 )}
               </li>
+              <div className="overflow-auto" style={{height: 'calc(100vh - 180px)'}}>
               {items
                 .filter(i => i.title.toLowerCase().includes(filter.search.toLowerCase()))
                 .sort((a, b) => (a.title < b.title ? -1 : 1))
@@ -205,9 +206,10 @@ const ListScreen = ({ match }) => {
                     )}
                   </li>
                 ))}
+                </div>
             </ul>
           </div>
-          <div className="col-sm-9">
+          <div className="col-sm-9 overflow-auto" style={{height: 'calc(100vh - 180px)'}}>
             {form === 'create' ? (
               <UpsertForm item={null} onSubmit={handleUpsertCreateSubmit} models={models} />
             ) : item === 'loading' ? (

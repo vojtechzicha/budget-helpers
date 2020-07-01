@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { ObjectID } from 'mongodb'
 import { createReadStream } from 'streamifier'
 import oneDriveApi from 'onedrive-api'
-import uuid from 'uuid/v4'
+import { v4 as uuid} from 'uuid'
 import { extname } from 'path'
 import moment from 'moment'
 
