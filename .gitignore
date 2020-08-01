@@ -18,7 +18,8 @@
 .env.production.local
 
 # server
-/.env
+.env
+!/portal/.env
 /dist
 /access.log
 

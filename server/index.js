@@ -55,7 +55,6 @@ console.log('2) Morgan Configuration - DONE')
 console.log('3. MongoDB Configuration')
 
 MongoClient.connect(process.env.MONGO_URI, (err, conn) => {
-  console.log(process.env.MONGO_URI)
   if (err) {
     console.error('No connection to the database')
     throw err
