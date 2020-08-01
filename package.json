@@ -1,54 +1,45 @@
 {
-  "name": "budget-helpers",
+  "name": "budget-helpers-server",
   "version": "1.0.0",
-  "private": true,
-  "repository": "https://github.com/vojtechzicha/budget-helpers.git",
-  "dependencies": {
-    "auth0-js": "^9.11.1",
-    "bootstrap": "^4.1.3",
-    "express-fileupload": "^1.1.7-alpha.3",
-    "formik": "^2.1.4",
-    "jquery": "^3.2.1",
-    "moment": "^2.22.2",
-    "popper.js": "^1.14.6",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-octicon": "^3.0.1",
-    "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.0.1",
-    "react-select": "^3.0.4",
-    "uuid": "^8.2.0",
-    "yup": "^0.29.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "server:start": "cd ./server && yarn start",
-    "server:dev:start": "cd ./server && yarn dev:start",
-    "dev:start": "run-p start server:dev:start",
-    "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
-  },
+  "description": "API for budget-helpers repo",
   "main": "index.js",
-  "author": "Vojtěch Zicha <vojtech@zicha.name>",
+  "repository": "https://gihtub.com/vojtechzicha/budget-helpers.git",
+  "author": "Vojtěch Zicha",
   "license": "MIT",
-  "homepage": "https://budget.vojtechzicha.com",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.5",
+    "express": "^4.16.2",
+    "express-fileupload": "^1.1.7-alpha.3",
+    "express-jwt": "^6.0.0",
+    "express-jwt-authz": "^2.4.0",
+    "jwks-rsa": "^1.8.1",
+    "moment": "^2.27.0",
+    "mongodb": "^3.5.9",
+    "morgan": "^1.10.0",
+    "onedrive-api": "^0.3.4",
+    "sqreen": "^1.45.0",
+    "streamifier": "^0.1.1",
+    "uuid": "^8.2.0"
+  },
   "devDependencies": {
-    "gh-pages": "^3.1.0",
-    "npm-run-all": "^4.1.5"
+    "@babel/cli": "^7.10.4",
+    "@babel/core": "^7.10.4",
+    "@babel/node": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "babel-plugin-inline-dotenv": "^1.3.3",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2"
   },
   "engines": {
-    "node": "^14.4"
+    "node": "^14.4",
+    "yarn": "^1.5"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "scripts": {
+    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./yarn-debug.log,./yarn-error.log,./access.log,./package.json,./yarn.lock --copy-files",
+    "start": "node dist/index.js",
+    "postinstall": "yarn build",
+    "dev:start:script": "babel-node -- ./index.js",
+    "dev:start": "nodemon --exec yarn dev:start:script"
+  }
 }
