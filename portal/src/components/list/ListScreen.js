@@ -9,41 +9,41 @@ import UpsertForm from './UpsertForm'
 import context from '../../context'
 
 const Filter = ({ onChange, filter, options = [], current = null, isCreate = false, onCreate = null, onBack = null }) => (
-  <div className="input-group mb-3">
+  <div className='input-group mb-3'>
     <input
-      type="text"
-      className="form-control"
-      placeholder="filter"
-      aria-label="filter"
-      aria-describedby="basic-addon1"
-      onChange={(e) => onChange({ filter: e.currentTarget.value, selector: current })}
+      type='text'
+      className='form-control'
+      placeholder='filter'
+      aria-label='filter'
+      aria-describedby='basic-addon1'
+      onChange={e => onChange({ filter: e.currentTarget.value, selector: current })}
     />
     {options.length > 0 && (
-      <div className="input-group-append">
-        <button className="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+      <div className='input-group-append'>
+        <button className='btn btn-outline-secondary dropdown-toggle' type='button' data-toggle='dropdown'>
           {current}
         </button>
-        <div className="dropdown-menu">
+        <div className='dropdown-menu'>
           {options
-            .filter((option) => option !== current)
+            .filter(option => option !== current)
             .map((option, index) =>
               option === '-' ? (
-                <div key={index} role="separator" className="dropdown-divider" />
+                <div key={index} role='separator' className='dropdown-divider' />
               ) : (
-                <button className="dropdown-item" key={option} onClick={() => onChange({ filter, selector: option })}>
+                <button className='dropdown-item' key={option} onClick={() => onChange({ filter, selector: option })}>
                   {option}
                 </button>
               )
             )}
         </div>
         {!isCreate && onCreate && (
-          <button className="btn btn-secondary" type="button" onClick={onCreate}>
-            <Octicon name="plus" />
+          <button className='btn btn-secondary' type='button' onClick={onCreate}>
+            <Octicon name='plus' />
           </button>
         )}
         {isCreate && onBack && (
-          <button className="btn btn-secondary" type="button" onClick={onBack}>
-            <Octicon name="arrow-left" />
+          <button className='btn btn-secondary' type='button' onClick={onBack}>
+            <Octicon name='arrow-left' />
           </button>
         )}
       </div>
@@ -89,8 +89,8 @@ const ListScreen = ({ match }) => {
       const id = match.params.key
 
       const [items, item] = await Promise.all([
-        fetch('assets', `items?filter=${options[filter.selector]}`).then((res) => res.json()),
-        fetch('assets', itemUrl(id)).then((res) => res.json())
+        fetch('assets', `items?filter=${options[filter.selector]}`).then(res => res.json()),
+        fetch('assets', itemUrl(id)).then(res => res.json())
       ])
 
       setItems(items)
@@ -101,7 +101,7 @@ const ListScreen = ({ match }) => {
 
   useEffect(() => {
     ;(async () => {
-      setModels(await fetch('assets', 'item-models').then((res) => res.json()))
+      setModels(await fetch('assets', 'item-models').then(res => res.json()))
     })()
   }, [fetch])
 
@@ -114,10 +114,10 @@ const ListScreen = ({ match }) => {
 
   const handleFilterChange = async ({ newFilter, selector }) => {
     if (selector !== filter.selector) {
-      setFilter((filter) => ({ ...filter, loading: true }))
-      const newItems = await fetch('assets', `items?filter=${options[selector]}`).then((res) => res.json())
+      setFilter(filter => ({ ...filter, loading: true }))
+      const newItems = await fetch('assets', `items?filter=${options[selector]}`).then(res => res.json())
 
-      if (newItems.map((i) => i._id).includes(item._id)) {
+      if (newItems.map(i => i._id).includes(item._id)) {
         setFilter({ search: '', selector, loading: false })
         setItems(newItems)
       } else {
@@ -126,11 +126,11 @@ const ListScreen = ({ match }) => {
         setRedirect('/')
       }
     } else {
-      setFilter((filter) => ({ ...filter, search: newFilter, selector }))
+      setFilter(filter => ({ ...filter, search: newFilter, selector }))
     }
   }
 
-  const handleUpsertCreateSubmit = async (body) =>
+  const handleUpsertCreateSubmit = async body =>
     fetch(
       'assets',
       'item',
@@ -143,12 +143,12 @@ const ListScreen = ({ match }) => {
         'Content-Type': 'application/json'
       }
     )
-      .then((res) => res.json())
-      .then((res) => {
+      .then(res => res.json())
+      .then(res => {
         setRedirect(`/item/${res.id}`)
       })
 
-  const handleUpsertEditSubmit = async (body) =>
+  const handleUpsertEditSubmit = async body =>
     fetch(
       'assets',
       `item/${item._id}`,
@@ -160,7 +160,7 @@ const ListScreen = ({ match }) => {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    ).then((res) => {
+    ).then(res => {
       setRedirect(`/item/${res.id}`)
     })
 
@@ -169,11 +169,11 @@ const ListScreen = ({ match }) => {
   ) : (
     <Fragment>
       <Header match={match} />
-      <div className="container-fluid" style={{ marginTop: '1em' }}>
-        <div className="row">
-          <div className="col-sm-3">
-            <ul className="list-group">
-              <li className="list-group-item">
+      <div className='container-fluid' style={{ marginTop: '1em' }}>
+        <div className='row'>
+          <div className='col-sm-3'>
+            <ul className='list-group'>
+              <li className='list-group-item'>
                 {filter.loading ? (
                   'Loading...'
                 ) : (
@@ -188,18 +188,18 @@ const ListScreen = ({ match }) => {
                   />
                 )}
               </li>
-              <div className="overflow-auto" style={{ height: 'calc(100vh - 180px)' }}>
+              <div className='overflow-auto' style={{ height: 'calc(100vh - 180px)' }}>
                 {items
-                  .filter((i) => i.title.toLowerCase().includes(filter.search.toLowerCase()))
+                  .filter(i => i.title.toLowerCase().includes(filter.search.toLowerCase()))
                   .sort((a, b) => (a.title < b.title ? -1 : 1))
-                  .map((i) => (
-                    <li key={i._id} className="list-group-item">
+                  .map(i => (
+                    <li key={i._id} className='list-group-item'>
                       {i._id === item._id ? (
-                        <span className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
+                        <span className='mb-2 text-muted' style={{ fontSize: 'smaller' }}>
                           <strong>{item.title}</strong>
                         </span>
                       ) : (
-                        <Link to={`/item/${i._id}`} className="mb-2 text-muted" style={{ fontSize: 'smaller' }}>
+                        <Link to={`/item/${i._id}`} className='mb-2 text-muted' style={{ fontSize: 'smaller' }}>
                           {i.title}
                         </Link>
                       )}
@@ -208,11 +208,11 @@ const ListScreen = ({ match }) => {
               </div>
             </ul>
           </div>
-          <div className="col-sm-9 overflow-auto" style={{ height: 'calc(100vh - 180px)' }}>
+          <div className='col-sm-9 overflow-auto' style={{ height: 'calc(100vh - 180px)' }}>
             {form === 'create' ? (
               <UpsertForm item={null} onSubmit={handleUpsertCreateSubmit} models={models} />
             ) : item === 'loading' ? (
-              <div className="loader" />
+              <div className='loader' />
             ) : form === 'edit' ? (
               <UpsertForm item={item} onSubmit={handleUpsertEditSubmit} models={models} />
             ) : (
@@ -220,7 +220,12 @@ const ListScreen = ({ match }) => {
                 item={item}
                 onRemove={handleRemove}
                 onEdit={() => setForm('edit')}
-                onUpdate={() => setRedirect('/')}
+                // onUpdate={() => setRedirect('/')}
+                // onUpdate={() => console.log('update')}
+                onUpdate={async () => {
+                  const newItem = await fetch('assets', itemUrl(match.params.key)).then(res => res.json())
+                  setItem(newItem)
+                }}
                 auth={auth}
               />
             )}
