@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useContext } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import Octicon from 'react-octicon'
 import { Formik } from 'formik'
@@ -19,24 +19,24 @@ const EditingRow = ({ doc, onSubmit, onCancel }) => (
     }}
     render={({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="col">
+        <div className='form-row'>
+          <div className='col'>
             <input
-              type="text"
-              className="form-control"
-              placeholder="vey"
-              name="key"
+              type='text'
+              className='form-control'
+              placeholder='vey'
+              name='key'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.key}
             />
           </div>
-          <div className="col">
-            <button type="submit" className="btn btn-primary btn-small" disabled={isSubmitting}>
-              <Octicon name="check" />
+          <div className='col'>
+            <button type='submit' className='btn btn-primary btn-small' disabled={isSubmitting}>
+              <Octicon name='check' />
             </button>
-            <button type="button" className="btn btn-default btn-small" onClick={onCancel}>
-              <Octicon name="x" />
+            <button type='button' className='btn btn-default btn-small' onClick={onCancel}>
+              <Octicon name='x' />
             </button>
           </div>
         </div>
@@ -60,7 +60,7 @@ class DocumentsCard extends Component {
       item: { _id },
       onUpdate
     } = this.props
-    const { fetch, auth } = useContext(context)
+    const { fetch, auth } = this.context
 
     e.preventDefault()
 
@@ -168,8 +168,8 @@ class DocumentsCard extends Component {
     const { auth } = this.context
 
     return !auth.isOneDriveAuthenticated() ? (
-      <Card title="Documents" subtitle="OneDrive signed out">
-        <Link to="/onedrive/signin">Sign in</Link>
+      <Card title='Documents' subtitle='OneDrive signed out'>
+        <Link to='/onedrive/signin'>Sign in</Link>
       </Card>
     ) : (
       <Card
@@ -177,23 +177,23 @@ class DocumentsCard extends Component {
           <span>
             Documents{' '}
             <button
-              type="button"
-              className="btn btn-default btn-outline btn-small"
+              type='button'
+              className='btn btn-default btn-outline btn-small'
               onClick={() => this.setState(({ adding }) => ({ adding: !adding }))}>
-              <Octicon name="plus" />
+              <Octicon name='plus' />
             </button>
           </span>
         }>
         {adding ? (
           <form onSubmit={e => e.preventDefault()}>
-            <div className="form-row">
-              <div className="col">
+            <div className='form-row'>
+              <div className='col'>
                 <input
                   ref={ref => {
                     this.uploadInput = ref
                   }}
-                  type="file"
-                  className="form-control"
+                  type='file'
+                  className='form-control'
                   onChange={this.handleUpload}
                   onClick={e => (e.target.value = null)}
                 />
@@ -201,7 +201,7 @@ class DocumentsCard extends Component {
             </div>
           </form>
         ) : (
-          <div className="card-text">
+          <div className='card-text'>
             {(documents || []).map(doc => (
               <div key={doc.id} onMouseEnter={() => this.setState({ hover: doc.id })} onMouseLeave={() => this.setState({ hover: -2 })}>
                 {editing === doc.id ? (
@@ -210,8 +210,8 @@ class DocumentsCard extends Component {
                   <Fragment>
                     <a
                       href={links[doc.id] !== undefined ? links[doc.id] : '/'}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target='_blank'
+                      rel='noopener noreferrer'
                       title={doc.filename}
                       onClick={e => {
                         if (links[doc.id] === undefined) {
@@ -226,13 +226,13 @@ class DocumentsCard extends Component {
                     {hover === doc.id && (
                       <Fragment>
                         <button
-                          type="button"
-                          className="btn btn-default btn-outline btn-small"
+                          type='button'
+                          className='btn btn-default btn-outline btn-small'
                           onClick={() => this.setState({ editing: doc.id })}>
-                          <Octicon name="pencil" />
+                          <Octicon name='pencil' />
                         </button>
-                        <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => this.handleRemove(doc.id)}>
-                          <Octicon name="trashcan" />
+                        <button type='button' className='btn btn-default btn-outline btn-small' onClick={() => this.handleRemove(doc.id)}>
+                          <Octicon name='trashcan' />
                         </button>
                       </Fragment>
                     )}
