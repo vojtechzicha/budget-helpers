@@ -22,6 +22,7 @@
 !/portal/.env
 /dist
 /access.log
+/server/access.log
 
 npm-debug.log*
 yarn-debug.log*
