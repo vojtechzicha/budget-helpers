@@ -160,9 +160,12 @@ const ListScreen = ({ match }) => {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
-    ).then(res => {
-      setRedirect(`/item/${res.id}`)
-    })
+    )
+      .then(() => fetch('assets', itemUrl(item._id)).then(res => res.json()))
+      .then(newItem => {
+        setItem(newItem)
+        setForm(null)
+      })
 
   return redirect !== null ? (
     <Redirect to={redirect} />
