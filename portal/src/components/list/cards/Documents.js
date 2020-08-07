@@ -16,8 +16,8 @@ const EditingRow = ({ doc, onSubmit, onCancel }) => (
     onSubmit={async (values, { setSubmitting }) => {
       await onSubmit(doc.id, values.key)
       setSubmitting(false)
-    }}
-    render={({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
+    }}>
+    {({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
       <form onSubmit={handleSubmit}>
         <div className='form-row'>
           <div className='col'>
@@ -42,7 +42,7 @@ const EditingRow = ({ doc, onSubmit, onCancel }) => (
         </div>
       </form>
     )}
-  />
+  </Formik>
 )
 
 class DocumentsCard extends Component {

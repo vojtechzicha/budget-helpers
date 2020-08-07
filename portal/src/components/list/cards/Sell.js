@@ -11,8 +11,8 @@ const SoldCard = ({
     sell: { date, accountingCurrencyAmount, originalCurrency, originalCurrencyAmount }
   }
 }) => (
-  <Card title="Sold">
-    <p className="card-text">
+  <Card title='Sold'>
+    <p className='card-text'>
       <strong>Date</strong>: {moment(date).format('MMMM Do, YYYY')}
       <br />
       <strong>Amount</strong>: {accountingCurrencyAmount.toLocaleString('cs-CZ', { style: 'currency', currency: 'CZK' })}
@@ -23,7 +23,7 @@ const SoldCard = ({
 )
 
 const InSellCard = ({ item: { _id }, fetch, onUpdate }) => (
-  <Card title="Sale Details">
+  <Card title='Sale Details'>
     <Formik
       initialValues={{ date: moment().format('YYYY-MM-DD'), amount: '' }}
       validationSchema={Yup.object().shape({
@@ -54,39 +54,39 @@ const InSellCard = ({ item: { _id }, fetch, onUpdate }) => (
 
         onUpdate()
         setSubmitting(false)
-      }}
-      render={({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
+      }}>
+      {({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
         <form onSubmit={handleSubmit}>
-          <div className="form-row">
-            <div className="col">
+          <div className='form-row'>
+            <div className='col'>
               <input
-                type="date"
-                className="form-control"
-                placeholder="Sell date"
-                name="date"
+                type='date'
+                className='form-control'
+                placeholder='Sell date'
+                name='date'
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.date}
               />
             </div>
-            <div className="col">
+            <div className='col'>
               <input
-                type="number"
-                className="form-control"
-                placeholder="Amount"
-                name="amount"
+                type='number'
+                className='form-control'
+                placeholder='Amount'
+                name='amount'
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.amount}
               />
             </div>
-            <div className="col">
-              <button type="submit" className="btn btn-primary btn-small" disabled={isSubmitting}>
-                <Octicon name="check" />
+            <div className='col'>
+              <button type='submit' className='btn btn-primary btn-small' disabled={isSubmitting}>
+                <Octicon name='check' />
               </button>
               <button
-                type="button"
-                className="btn btn-default btn-small"
+                type='button'
+                className='btn btn-default btn-small'
                 onClick={async () => {
                   await fetch(
                     'assets',
@@ -105,13 +105,13 @@ const InSellCard = ({ item: { _id }, fetch, onUpdate }) => (
 
                   onUpdate()
                 }}>
-                <Octicon name="x" />
+                <Octicon name='x' />
               </button>
             </div>
           </div>
         </form>
       )}
-    />
+    </Formik>
   </Card>
 )
 

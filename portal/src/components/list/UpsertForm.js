@@ -4,12 +4,12 @@ import * as Yup from 'yup'
 import moment from 'moment'
 
 const Input = ({ name, label, type = 'text', values, errors, touched, handleChange, handleBlur }) => (
-  <div className="form-group">
+  <div className='form-group'>
     <label htmlFor={name}>{label}</label>
     <input
       type={type}
       step={type === 'number' ? '0.01' : null}
-      className="form-control"
+      className='form-control'
       id={name}
       name={name}
       onChange={handleChange}
@@ -17,7 +17,7 @@ const Input = ({ name, label, type = 'text', values, errors, touched, handleChan
       value={values[name]}
     />
     {touched[name] && errors[name] && (
-      <small className="form-text" style={{ color: 'red' }}>
+      <small className='form-text' style={{ color: 'red' }}>
         {' '}
         {errors[name]}{' '}
       </small>
@@ -26,9 +26,9 @@ const Input = ({ name, label, type = 'text', values, errors, touched, handleChan
 )
 
 const SelectInput = ({ name, label, values, errors, touched, handleChange, handleBlur, options }) => (
-  <div className="form-group">
+  <div className='form-group'>
     <label htmlFor={name}>{label}</label>
-    <select name={name} className="form-control" value={values[name]} onChange={handleChange} onBlur={handleBlur} id={name}>
+    <select name={name} className='form-control' value={values[name]} onChange={handleChange} onBlur={handleBlur} id={name}>
       {/* {options.find(o => o.value === values[name]) === undefined && (
         <option value="not selected" selected={true}>
           <em>not selected</em>
@@ -41,7 +41,7 @@ const SelectInput = ({ name, label, values, errors, touched, handleChange, handl
       ))}
     </select>
     {touched[name] && errors[name] && (
-      <small className="form-text" style={{ color: 'red' }}>
+      <small className='form-text' style={{ color: 'red' }}>
         {' '}
         {errors[name]}{' '}
       </small>
@@ -78,8 +78,8 @@ const UpsertForm = ({ onSubmit, item, models }) => (
         model: values.model
       })
       setSubmitting(false)
-    }}
-    render={props => {
+    }}>
+    {props => {
       const { isSubmitting, handleSubmit } = props
       const inputProps = {
         values: props.values,
@@ -90,19 +90,19 @@ const UpsertForm = ({ onSubmit, item, models }) => (
       }
       return (
         <form onSubmit={handleSubmit}>
-          <Input name="title" label="Title" {...inputProps} />
-          <Input type="number" name="warranty" label="Warranty Period (in months)" {...inputProps} />
-          <SelectInput name="model" label="Model" options={models.map(m => ({ label: m.label, value: m._id }))} {...inputProps} />
+          <Input name='title' label='Title' {...inputProps} />
+          <Input type='number' name='warranty' label='Warranty Period (in months)' {...inputProps} />
+          <SelectInput name='model' label='Model' options={models.map(m => ({ label: m.label, value: m._id }))} {...inputProps} />
           <h3>Invoice</h3>
-          <Input type="date" name="invoice_date" label="Date" {...inputProps} />
-          <Input type="number" name="invoice_amount" label="Amount" {...inputProps} />
-          <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+          <Input type='date' name='invoice_date' label='Date' {...inputProps} />
+          <Input type='number' name='invoice_amount' label='Amount' {...inputProps} />
+          <button type='submit' className='btn btn-primary' disabled={isSubmitting}>
             {item === null ? 'Create' : 'Update'}
           </button>
         </form>
       )
     }}
-  />
+  </Formik>
 )
 
 export default UpsertForm

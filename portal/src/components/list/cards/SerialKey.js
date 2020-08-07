@@ -14,33 +14,33 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
     onSubmit={async (values, { setSubmitting }) => {
       await onSubmit(values.value)
       setSubmitting(false)
-    }}
-    render={({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
+    }}>
+    {({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="col">
+        <div className='form-row'>
+          <div className='col'>
             <input
-              type="text"
-              className="form-control"
-              placeholder="value"
-              name="value"
+              type='text'
+              className='form-control'
+              placeholder='value'
+              name='value'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.value}
             />
           </div>
-          <div className="col">
-            <button type="submit" className="btn btn-primary btn-small" disabled={isSubmitting}>
-              <Octicon name="check" />
+          <div className='col'>
+            <button type='submit' className='btn btn-primary btn-small' disabled={isSubmitting}>
+              <Octicon name='check' />
             </button>
-            <button type="button" className="btn btn-default btn-small" onClick={onCancel}>
-              <Octicon name="x" />
+            <button type='button' className='btn btn-default btn-small' onClick={onCancel}>
+              <Octicon name='x' />
             </button>
           </div>
         </div>
       </form>
     )}
-  />
+  </Formik>
 )
 
 const SerialKeyCard = ({ item, fetch, onUpdate }) => {
@@ -87,19 +87,19 @@ const SerialKeyCard = ({ item, fetch, onUpdate }) => {
   }
 
   return (
-    <Card title="Serial Key">
+    <Card title='Serial Key'>
       {editing ? (
         <EditingRow val={item.serialKey} onSubmit={handleEdit} onCancel={() => setEditing(false)} />
       ) : (
-        <h6 className="card-subtitle mb-2 text-muted" onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
+        <h6 className='card-subtitle mb-2 text-muted' onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
           {item.serialKey === '' ? <em>missing</em> : item.serialKey}{' '}
           {hovering ? (
             <Fragment>
-              <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => setEditing(false)}>
-                <Octicon name="pencil" />
+              <button type='button' className='btn btn-default btn-outline btn-small' onClick={() => setEditing(false)}>
+                <Octicon name='pencil' />
               </button>
-              <button type="button" className="btn btn-default btn-outline btn-small" onClick={handleRemove}>
-                <Octicon name="trashcan" />
+              <button type='button' className='btn btn-default btn-outline btn-small' onClick={handleRemove}>
+                <Octicon name='trashcan' />
               </button>
             </Fragment>
           ) : null}

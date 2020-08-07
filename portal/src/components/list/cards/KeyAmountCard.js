@@ -8,7 +8,7 @@ import Card from './Card'
 
 const StaticRow = ({ val }) => (
   <Fragment>
-    <p className="card-text" key={val.id}>
+    <p className='card-text' key={val.id}>
       <strong>
         <u>{val.type}</u>
       </strong>
@@ -49,73 +49,73 @@ const EditingRow = ({ val, onSubmit, onCancel }) => (
         originalCurrency: 'CZK'
       })
       setSubmitting(false)
-    }}
-    render={({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
+    }}>
+    {({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="col">
+        <div className='form-row'>
+          <div className='col'>
             <input
-              type="text"
-              className="form-control"
-              placeholder="Type"
-              name="type"
+              type='text'
+              className='form-control'
+              placeholder='Type'
+              name='type'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.type}
               style={{ fontWeight: 'bold' }}
             />
           </div>
-          <div className="col">
+          <div className='col'>
             <input
-              type="text"
-              className="form-control"
-              placeholder="Name"
-              name="name"
+              type='text'
+              className='form-control'
+              placeholder='Name'
+              name='name'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.name}
             />
           </div>
         </div>
-        <div className="form-row">
-          <div className="col">
+        <div className='form-row'>
+          <div className='col'>
             <input
-              type="date"
-              className="form-control"
-              placeholder="invoiceDate"
-              name="invoiceDate"
+              type='date'
+              className='form-control'
+              placeholder='invoiceDate'
+              name='invoiceDate'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.invoiceDate}
             />
           </div>
         </div>
-        <div className="form-row">
-          <div className="col">
+        <div className='form-row'>
+          <div className='col'>
             <input
-              type="number"
-              className="form-control"
-              placeholder="amount"
-              name="amount"
-              min="0"
-              step="0.01"
+              type='number'
+              className='form-control'
+              placeholder='amount'
+              name='amount'
+              min='0'
+              step='0.01'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.amount}
             />
           </div>
-          <div className="col">
-            <button type="submit" className="btn btn-primary btn-small" disabled={isSubmitting}>
-              <Octicon name="check" />
+          <div className='col'>
+            <button type='submit' className='btn btn-primary btn-small' disabled={isSubmitting}>
+              <Octicon name='check' />
             </button>
-            <button type="button" className="btn btn-default btn-small" onClick={onCancel}>
-              <Octicon name="x" />
+            <button type='button' className='btn btn-default btn-small' onClick={onCancel}>
+              <Octicon name='x' />
             </button>
           </div>
         </div>
       </form>
     )}
-  />
+  </Formik>
 )
 
 class KeyAmountCard extends Component {
@@ -170,13 +170,13 @@ class KeyAmountCard extends Component {
           <span onMouseEnter={() => this.setState({ hover: -1 })} onMouseLeave={() => this.setState({ hover: -2 })}>
             {label}{' '}
             {hover === -1 && (
-              <button type="button" className="btn btn-default btn-outline btn-small" onClick={this.handleCreate}>
-                <Octicon name="plus" />
+              <button type='button' className='btn btn-default btn-outline btn-small' onClick={this.handleCreate}>
+                <Octicon name='plus' />
               </button>
             )}
           </span>
         }>
-        <div className="card-text">
+        <div className='card-text'>
           {item[itemKey].map(val => (
             <div key={val.id} onMouseEnter={() => this.setState({ hover: val.id })} onMouseLeave={() => this.setState({ hover: -2 })}>
               {editingIndex === val.id ? (
@@ -187,13 +187,13 @@ class KeyAmountCard extends Component {
                   {hover === val.id && (
                     <Fragment>
                       <button
-                        type="button"
-                        className="btn btn-default btn-outline btn-small"
+                        type='button'
+                        className='btn btn-default btn-outline btn-small'
                         onClick={() => this.setState({ editingIndex: val.id })}>
-                        <Octicon name="pencil" />
+                        <Octicon name='pencil' />
                       </button>
-                      <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => this.handleRemove(val.id)}>
-                        <Octicon name="trashcan" />
+                      <button type='button' className='btn btn-default btn-outline btn-small' onClick={() => this.handleRemove(val.id)}>
+                        <Octicon name='trashcan' />
                       </button>
                     </Fragment>
                   )}

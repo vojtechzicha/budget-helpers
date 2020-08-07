@@ -21,45 +21,45 @@ const EditingRow = ({ i, val, onSubmit, onCancel }) => (
     onSubmit={async (values, { setSubmitting }) => {
       await onSubmit(i, values)
       setSubmitting(false)
-    }}
-    render={({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
+    }}>
+    {({ isSubmitting, handleSubmit, values, errors, touched, handleChange, handleBlur }) => (
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="col">
+        <div className='form-row'>
+          <div className='col'>
             <input
-              type="text"
-              className="form-control"
-              placeholder="vey"
-              name="key"
+              type='text'
+              className='form-control'
+              placeholder='vey'
+              name='key'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.key}
               style={{ fontWeight: 'bold' }}
             />
           </div>
-          <div className="col">
+          <div className='col'>
             <input
-              type="text"
-              className="form-control"
-              placeholder="value"
-              name="value"
+              type='text'
+              className='form-control'
+              placeholder='value'
+              name='value'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.value}
             />
           </div>
-          <div className="col">
-            <button type="submit" className="btn btn-primary btn-small" disabled={isSubmitting}>
-              <Octicon name="check" />
+          <div className='col'>
+            <button type='submit' className='btn btn-primary btn-small' disabled={isSubmitting}>
+              <Octicon name='check' />
             </button>
-            <button type="button" className="btn btn-default btn-small" onClick={onCancel}>
-              <Octicon name="x" />
+            <button type='button' className='btn btn-default btn-small' onClick={onCancel}>
+              <Octicon name='x' />
             </button>
           </div>
         </div>
       </form>
     )}
-  />
+  </Formik>
 )
 
 class KeyValueCard extends Component {
@@ -104,13 +104,13 @@ class KeyValueCard extends Component {
           <span onMouseEnter={() => this.setState({ hover: -1 })} onMouseLeave={() => this.setState({ hover: -2 })}>
             {label}{' '}
             {hover === -1 && (
-              <button type="button" className="btn btn-default btn-outline btn-small" onClick={this.handleCreate}>
-                <Octicon name="plus" />
+              <button type='button' className='btn btn-default btn-outline btn-small' onClick={this.handleCreate}>
+                <Octicon name='plus' />
               </button>
             )}
           </span>
         }>
-        <div className="card-text">
+        <div className='card-text'>
           {item[itemKey].map((val, i) => (
             <div key={i} onMouseEnter={() => this.setState({ hover: i })} onMouseLeave={() => this.setState({ hover: -2 })}>
               {editingIndex === i ? (
@@ -121,13 +121,13 @@ class KeyValueCard extends Component {
                   {hover === i && (
                     <Fragment>
                       <button
-                        type="button"
-                        className="btn btn-default btn-outline btn-small"
+                        type='button'
+                        className='btn btn-default btn-outline btn-small'
                         onClick={() => this.setState({ editingIndex: i })}>
-                        <Octicon name="pencil" />
+                        <Octicon name='pencil' />
                       </button>
-                      <button type="button" className="btn btn-default btn-outline btn-small" onClick={() => this.handleRemove(i)}>
-                        <Octicon name="trashcan" />
+                      <button type='button' className='btn btn-default btn-outline btn-small' onClick={() => this.handleRemove(i)}>
+                        <Octicon name='trashcan' />
                       </button>
                     </Fragment>
                   )}
