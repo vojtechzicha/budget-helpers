@@ -95,7 +95,7 @@ const SerialKeyCard = ({ item, fetch, onUpdate }) => {
           {item.serialKey === '' ? <em>missing</em> : item.serialKey}{' '}
           {hovering ? (
             <Fragment>
-              <button type='button' className='btn btn-default btn-outline btn-small' onClick={() => setEditing(false)}>
+              <button type='button' className='btn btn-default btn-outline btn-small' onClick={() => setEditing(true)}>
                 <Octicon name='pencil' />
               </button>
               <button type='button' className='btn btn-default btn-outline btn-small' onClick={handleRemove}>
@@ -134,7 +134,7 @@ const SerialKey = item => ({
       )
     }
   },
-  card: (fetch, onUpdate) => <SerialKeyCard item={item} onUpdate={onUpdate} />
+  card: (fetch, onUpdate) => <SerialKeyCard item={item} onUpdate={onUpdate} fetch={fetch} />
 })
 
 export default SerialKey
