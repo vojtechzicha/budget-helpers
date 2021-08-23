@@ -31,7 +31,7 @@
     "rimraf": "^3.0.2"
   },
   "engines": {
-    "node": "^15.8",
+    "node": "^16.7",
     "yarn": "^1.22"
   },
   "scripts": {
