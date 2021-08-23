@@ -11,7 +11,7 @@ import { ExpiredWarranty, ValidWarranty } from './Warranty'
 
 import { WriteOff, Month } from './../old-cards'
 
-export default [
+const cards = [
   Details,
   SerialKey,
   Invoice,
@@ -25,3 +25,5 @@ export default [
   WriteOff,
   Month
 ]
+
+export default cards
